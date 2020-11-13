@@ -1,0 +1,50 @@
+$textColour:  hsl(0, 0%, 90%);
+$backgroundColour : hsl(0, 0%, 10%);
+
+$navbarColour : hsl(0, 0%, 7%);
+$borderColour:  hsl(0, 0%, 25%);
+
+$scrollbarThumbColour:  hsl(0, 0%, 20%) ;
+$scrollbarTrackColour:  hsl(0, 0%, 10%);
+
+
+@mixin scrollbar{
+    &::-webkit-scrollbar {
+        width: 12px;               /* width of the entire scrollbar */
+      }
+    &::-webkit-scrollbar-track {
+    background: $scrollbarTrackColour;        /* color of the tracking area */
+    }
+    &::-webkit-scrollbar-thumb {
+    background-color: $scrollbarThumbColour;    /* color of the scroll thumb */
+    border-radius: 20px;       /* roundness of the scroll thumb */
+    border: 2px solid $scrollbarTrackColour;  /* creates padding around scroll thumb */
+    }
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    color: $textColour;
+    background-color: $backgroundColour;
+    font-size: 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    @include scrollbar;
+}
+
+a{
+    text-decoration: none;
+    color: $textColour;
+}
+
+.posts-container{
+    float:left;
+    margin-left: 40px;
+}
+
+.stories-container{
+    float: right;
+    margin-right: 40px;
+}
+
