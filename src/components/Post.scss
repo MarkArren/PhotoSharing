@@ -1,0 +1,50 @@
+@import '../App.scss';
+
+.post{
+    padding: 10px 0px;
+    width: 650px;
+    height: 100%;
+    border-radius: 5px;
+    border: $borderColour 1px solid;
+}
+
+.post-top{
+    padding: 5px 15px 15px 15px;
+}
+
+.post-top-profilepic{
+    height: 100%;
+}
+
+.post-top-profilepic img{
+    margin-right: 15px;
+    border-radius: 50%;
+    width: 50px;
+    float: left;
+}
+
+.post-top-caption{
+    padding-top: 5px;
+    margin-left: 65px;
+}
+
+.post-img{
+    /* height: 600px; */
+}
+
+.post-img img{
+    width: 100%;
+}
+
+.post-interaction{
+    padding: 5px 15px;
+    vertical-align: middle;
+}
+
+.post-comments{
+    padding: 5px 15px;
+}
+
+.username{
+    font-weight: 500;
+}
