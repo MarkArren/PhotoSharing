@@ -1,0 +1,26 @@
+@import '../App.scss';
+
+.stories{
+    padding: 0px 15px;
+    width: auto;
+    height: 100%;
+    border: $borderColour 1px solid;
+    border-radius: 5px;
+    width: 430px;
+    height: 80vh;
+    text-align: center;
+    .row{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+    .column{
+        display: flex;
+        flex-direction: column;
+        flex-basis: 100%;
+        flex: 1;
+    }
+    overflow: auto;
+    @include scrollbar;
+}
