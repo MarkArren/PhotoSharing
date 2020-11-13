@@ -1,0 +1,35 @@
+@import '../App.scss';
+
+.navbar {
+    padding: 10px 50px;
+    height: 50px;
+    background-color:$navbarColour;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-right{
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
+
+.nav-search{
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: $backgroundColour;
+    color: $textColour;
+    text-align: center;
+    font-weight: bold;
+}
+
+.nav-search:focus{
+    outline: none;
+}
+
+.nav-icon{
+    padding-left: 10px;
+}
