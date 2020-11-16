@@ -24,10 +24,10 @@
     color: $textColour;
     text-align: center;
     font-weight: bold;
-}
 
-.nav-search:focus{
-    outline: none;
+    &:focus{
+        outline: none;
+    }
 }
 
 .nav-icon{

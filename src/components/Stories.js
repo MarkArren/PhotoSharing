@@ -5,35 +5,35 @@ function Stories(){
     return(
         <div className="stories">
         <h1>Stories</h1>
-            <div class='row'>
-                <div class='column'>
+            <div className='row'>
+                <div className='column'>
                     <StoryPreview />
                 </div>
-                <div class='column'>
-                    <StoryPreview />
-                </div>
-            </div>
-            <div class='row 2'>
-                <div class='column'>
-                    <StoryPreview />
-                </div>
-                <div class='column'>
+                <div className='column'>
                     <StoryPreview />
                 </div>
             </div>
-            <div class='row 3'>
-                <div class='column'>
+            <div className='row 2'>
+                <div className='column'>
                     <StoryPreview />
                 </div>
-                <div class='column'>
+                <div className='column'>
                     <StoryPreview />
                 </div>
             </div>
-            <div class='row 4'>
-                <div class='column'>
+            <div className='row 3'>
+                <div className='column'>
                     <StoryPreview />
                 </div>
-                <div class='column'>
+                <div className='column'>
+                    <StoryPreview />
+                </div>
+            </div>
+            <div className='row 4'>
+                <div className='column'>
+                    <StoryPreview />
+                </div>
+                <div className='column'>
                     <StoryPreview />
                 </div>
             </div>

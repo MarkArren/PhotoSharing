@@ -1,0 +1,23 @@
+@import '../App.scss';
+
+
+.messages-wrapper{
+    margin: 40px 80px;
+    height: 80vh;
+    border: $borderColour 1px solid;
+    border-radius: 5px;
+}
+
+.messages{
+    float: left;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 25%;
+    padding: 0 2em 0 2em;
+    border-right: $borderColour 1px solid;
+
+    div :last-child(){
+        border-bottom: none;
+    }
+}

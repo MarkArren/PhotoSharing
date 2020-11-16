@@ -13,7 +13,7 @@ function Navbar() {
       <div className="nav-right">
         <div className="nav-seach nav-icon ">
             <form className="nav-seach-form ">
-                <input type="text" name="search" placeholder="Search" class="nav-search"/>
+                <input type="text" name="search" placeholder="Search" className="nav-search"/>
             </form>
         </div>
         <Link to="/messages" className="nav-messages nav-icon"><FiMessageCircle/></Link>

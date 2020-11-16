@@ -1,0 +1,13 @@
+@import '../App.scss';
+
+.message-preview{
+    border-bottom: 1px solid $borderColour;
+    padding: 15px 0px;
+}
+
+.message-preview-profilepic img{
+    margin-right: 15px;
+    border-radius: 50%;
+    width: 65px;
+    float: left;
+}
