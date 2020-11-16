@@ -1,9 +1,9 @@
-@import '../App.scss';
+@import 'src/App.scss';
 
 .stories{
     padding: 0px 15px;
     width: auto;
-    height: 100%;
+    height: 100%; 
     border: $borderColour 1px solid;
     border-radius: 5px;
     width: 430px;

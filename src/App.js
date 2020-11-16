@@ -1,7 +1,7 @@
 import './App.scss';
-import Feed from './components/Feed.js';
-import Messages from './components/Messages.js';
-import Profile from './components/Profile.js';
+import Feed from './scenes/Feed/Feed.js';
+import Messages from './scenes/Messages/Messages.js';
+import Profile from './scenes/Profile/Profile.js';
 
 import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
 

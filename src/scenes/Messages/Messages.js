@@ -1,6 +1,6 @@
-import Navbar from './Navbar.js';
-import Chat from './Chat.js'
-import MessagePreview from './MessagePreview';
+import Navbar from '../../components/Navbar.js';
+import Chat from './components/Chat.js'
+import MessagePreview from './components/MessagePreview';
 import './Messages.scss';
 
 function Messages(){

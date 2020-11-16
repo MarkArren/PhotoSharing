@@ -1,4 +1,4 @@
-import Navbar from './Navbar.js';
+import Navbar from '../../components/Navbar.js';
 
 function Profile(){
     return(

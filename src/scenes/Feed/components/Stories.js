@@ -1,5 +1,5 @@
 import './Stories.scss';
-import StoryPreview from './StoryPreview.js';
+import StoryPreview from '../../../components/StoryPreview.js';
 
 function Stories(){
     return(

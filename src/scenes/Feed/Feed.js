@@ -1,6 +1,6 @@
-import Navbar from './Navbar.js';
-import Post from './Post.js';
-import Stories from './Stories.js';
+import Navbar from '../../components/Navbar.js';
+import Post from '../../components/Post.js';
+import Stories from './components/Stories.js';
 
 import './Feed.scss';
 
