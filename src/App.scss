@@ -1,11 +1,16 @@
 $textColour:  hsl(0, 0%, 90%);
 $backgroundColour : hsl(0, 0%, 10%);
 
+$accentColour1 : hsl(0, 0%, 15%);
+$accentColour2 : hsl(0, 0%, 20%);
+
 $navbarColour : hsl(0, 0%, 7%);
 $borderColour:  hsl(0, 0%, 25%);
 
 $scrollbarThumbColour:  hsl(0, 0%, 20%) ;
 $scrollbarTrackColour:  hsl(0, 0%, 10%);
+
+$submitColour: #7EBBDB;
 
 
 @mixin scrollbar{

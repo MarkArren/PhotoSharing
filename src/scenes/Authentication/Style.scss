@@ -1,0 +1,76 @@
+@import '../../App.scss';
+
+.form-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    min-width: 100vh;
+
+    a{
+        font-weight: 700;
+        &.forgot{
+            font-weight: 500;
+        }
+    }
+
+    .error{
+        width: 100%;
+        padding: 10px 20px;
+        border-radius: 5px;
+        box-sizing: border-box;
+        color: $textColour;
+        background-color: #aa0000;
+
+        &:empty {
+            display: none;
+        }
+        &.green{
+            background-color: green;
+        }
+    }
+
+    .form-wrapper{
+        // margin: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        // min-height: 50%;
+
+        padding: 25px 100px 50px 100px;
+        border-radius: 5px;
+        
+        width: 25%;
+        
+
+        background-color: $accentColour1;
+
+        form{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        input{
+            background-color: $accentColour2;
+            color: $textColour;
+            border: none;
+            border-radius: 5px;
+            padding: 20px 20px;
+            outline: none;
+            margin-bottom: 35px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .submit{
+            background-color: $submitColour;
+        }
+        .submit-google{
+            background-color: #0F9D58;
+        }
+    }
+}
