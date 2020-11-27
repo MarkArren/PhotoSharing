@@ -1,49 +1,50 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { auth, googleProvider } from '../services/firebase'
+import PropTypes from 'prop-types';
+import { auth, googleProvider } from '../services/firebase';
 
 const AuthContext = React.createContext();
 
 export function useAuth() {
-    return useContext(AuthContext)
+    return useContext(AuthContext);
 }
 
-export function AuthProvider ({children}) {
+export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState();
     const [loading, setLoading] = useState(true);
 
     // Log in user
-    function login(email, password){
+    function login(email, password) {
         return auth.signInWithEmailAndPassword(email, password);
     }
 
     // Log in user
-    function loginWithGoogle(email, password){
+    function loginWithGoogle() {
         return auth.signInWithPopup(googleProvider);
     }
 
     // Sign up user
-    function signup(email, password){
-       return auth.createUserWithEmailAndPassword(email, password);
+    function signup(email, password) {
+        return auth.createUserWithEmailAndPassword(email, password);
     }
 
     // Logout user
-    function logout(){
+    function logout() {
         return auth.signOut();
     }
 
-    function resetPassword(email){
+    function resetPassword(email) {
         return auth.sendPasswordResetEmail(email);
     }
 
     // Sets current user after render
     useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(user => {
-            setCurrentUser(user)
-            setLoading(false)
-        })
-    
-        return unsubscribe
-      }, [])
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            setCurrentUser(user);
+            setLoading(false);
+        });
+
+        return unsubscribe;
+    }, []);
 
     const value = {
         currentUser,
@@ -51,13 +52,12 @@ export function AuthProvider ({children}) {
         loginWithGoogle,
         signup,
         logout,
-        resetPassword
-    }
+        resetPassword,
+    };
 
-    return (
-        <AuthContext.Provider value={value}>
-            {!loading && children}
-        </AuthContext.Provider>
-    );
+    return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
 }
 
+AuthProvider.propTypes = {
+    children: PropTypes.func.isRequired,
+};

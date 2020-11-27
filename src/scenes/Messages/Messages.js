@@ -1,14 +1,15 @@
-import Navbar from '../../components/Navbar.js';
-import Chat from './components/Chat.js'
+import React from 'react';
+import Navbar from '../../components/Navbar';
+import Chat from './components/Chat';
 import MessagePreview from './components/MessagePreview';
 import './Messages.scss';
 
-function Messages(){
-    return(
+function Messages() {
+    return (
         <div>
             <Navbar />
-            <div className="messages-wrapper">
-                <div className="messages">
+            <div className='messages-wrapper'>
+                <div className='messages'>
                     <h3>Messages</h3>
                     <MessagePreview />
                     <MessagePreview />

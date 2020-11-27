@@ -1,22 +1,23 @@
-import Navbar from '../../components/Navbar.js';
-import Post from '../../components/Post.js';
-import Stories from './components/Stories.js';
+import React from 'react';
+import Navbar from '../../components/Navbar';
+import Post from '../../components/Post';
+import Stories from './components/Stories';
 
 import './Feed.scss';
 
 function Feed() {
-    return(
+    return (
         <div>
             <Navbar />
-            <div className="feed-selector">
+            <div className='feed-selector'>
                 <div>Following</div>
                 <div>For You</div>
             </div>
             <h1> </h1>
-            <div className="posts-container"> 
+            <div className='posts-container'>
                 <Post />
             </div>
-            <div className="stories-container"> 
+            <div className='stories-container'>
                 <Stories />
             </div>
         </div>

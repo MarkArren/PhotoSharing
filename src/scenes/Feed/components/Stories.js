@@ -1,10 +1,11 @@
 import './Stories.scss';
-import StoryPreview from '../../../components/StoryPreview.js';
+import React from 'react';
+import StoryPreview from '../../../components/StoryPreview';
 
-function Stories(){
-    return(
-        <div className="stories">
-        <h1>Stories</h1>
+function Stories() {
+    return (
+        <div className='stories'>
+            <h1>Stories</h1>
             <div className='row'>
                 <div className='column'>
                     <StoryPreview />

@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import { useAuth } from '../../context/AuthConext';
 
-
 const Logout = () => {
-    const { logout } = useAuth()
+    const { logout } = useAuth();
 
     useEffect(() => {
         // Create an scoped async function in the hook
@@ -12,13 +11,9 @@ const Logout = () => {
         }
         // Execute the created function directly
         logoutGoogle();
-      });
+    });
 
-    return (
-        <div>
-            Logging out
-        </div>
-    );
-}
+    return <div>Logging out</div>;
+};
 
 export default Logout;
