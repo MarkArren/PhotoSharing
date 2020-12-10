@@ -8,6 +8,7 @@ import Login from './scenes/Authentication/Login';
 import Signup from './scenes/Authentication/Signup';
 import ResetPassword from './scenes/Authentication/ResetPassword';
 import Logout from './scenes/Authentication/Logout';
+import Upload from './scenes/Upload/Upload';
 
 import { AuthProvider } from './context/AuthConext';
 
@@ -26,6 +27,7 @@ function App() {
                         <Route path='/signup' component={Signup} />
                         <Route path='/password-reset' component={ResetPassword} />
                         <PrivateRoute path='/logout' component={Logout} />
+                        <PrivateRoute path='/upload' component={Upload} />
                     </Switch>
                 </Router>
             </div>

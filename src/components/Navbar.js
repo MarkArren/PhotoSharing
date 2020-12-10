@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { FiMessageCircle } from 'react-icons/fi';
 import { MdNotifications } from 'react-icons/md';
 import { AiOutlineUser } from 'react-icons/ai';
+import { IoAddCircleOutline } from 'react-icons/io5';
 import { IconContext } from 'react-icons';
 
 function Navbar() {
@@ -31,6 +32,9 @@ function Navbar() {
                             />
                         </form>
                     </div>
+                    <Link to='/upload' className='nav-profile nav-icon'>
+                        <IoAddCircleOutline />
+                    </Link>
                     <Link to='/messages' className='nav-messages nav-icon'>
                         <FiMessageCircle />
                     </Link>
