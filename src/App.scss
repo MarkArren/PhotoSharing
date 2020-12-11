@@ -1,29 +1,44 @@
-$textColour:  hsl(0, 0%, 90%);
-$backgroundColour : hsl(0, 0%, 10%);
+$textColour: hsl(0, 0%, 90%);
+$textColour2: hsl(0, 0%, 60%);
+$backgroundColour: hsl(0, 0%, 10%);
+$backgroundColour2: hsl(0, 0%, 15%);
 
-$accentColour1 : hsl(0, 0%, 15%);
-$accentColour2 : hsl(0, 0%, 20%);
+$accentColour1: hsl(0, 0%, 15%);
+$accentColour2: hsl(0, 0%, 20%);
 
-$navbarColour : hsl(0, 0%, 7%);
-$borderColour:  hsl(0, 0%, 25%);
+$navbarColour: hsl(0, 0%, 7%);
+$borderColour: hsl(0, 0%, 25%);
 
-$scrollbarThumbColour:  hsl(0, 0%, 20%) ;
-$scrollbarTrackColour:  hsl(0, 0%, 10%);
+$scrollbarThumbColour: hsl(0, 0%, 20%);
+$scrollbarTrackColour: hsl(0, 0%, 10%);
 
-$submitColour: #7EBBDB;
+$submitColour: #7ebbdb;
 
-
-@mixin scrollbar{
+@mixin scrollbar {
     &::-webkit-scrollbar {
-        width: 12px;               /* width of the entire scrollbar */
-      }
+        width: 12px; /* width of the entire scrollbar */
+    }
     &::-webkit-scrollbar-track {
-    background: $scrollbarTrackColour;        /* color of the tracking area */
+        background: $scrollbarTrackColour; /* color of the tracking area */
     }
     &::-webkit-scrollbar-thumb {
-    background-color: $scrollbarThumbColour;    /* color of the scroll thumb */
-    border-radius: 20px;       /* roundness of the scroll thumb */
-    border: 2px solid $scrollbarTrackColour;  /* creates padding around scroll thumb */
+        background-color: $scrollbarThumbColour; /* color of the scroll thumb */
+        border-radius: 20px; /* roundness of the scroll thumb */
+        border: 2px solid $scrollbarTrackColour; /* creates padding around scroll thumb */
+    }
+}
+
+@mixin scrollbar2 {
+    &::-webkit-scrollbar {
+        width: 12px; /* width of the entire scrollbar */
+    }
+    &::-webkit-scrollbar-track {
+        background: hsl(0, 0%, 15%); /* color of the tracking area */
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: hsl(0, 0%, 25%); /* color of the scroll thumb */
+        border-radius: 20px; /* roundness of the scroll thumb */
+        border: 2px solid hsl(0, 0%, 15%); /* creates padding around scroll thumb */
     }
 }
 
@@ -38,18 +53,17 @@ body {
     @include scrollbar;
 }
 
-a{
+a {
     text-decoration: none;
     color: $textColour;
 }
 
-.posts-container{
-    float:left;
+.posts-container {
+    float: left;
     margin-left: 40px;
 }
 
-.stories-container{
+.stories-container {
     float: right;
     margin-right: 40px;
 }
-

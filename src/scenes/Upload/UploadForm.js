@@ -63,6 +63,7 @@ const UploadForm = () => {
             />
             <input
                 type='file'
+                className='comment'
                 onChange={(e) => {
                     if (e.target.files[0]) setImage(e.target.files[0]);
                 }}

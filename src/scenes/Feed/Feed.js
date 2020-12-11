@@ -26,7 +26,11 @@ function Feed() {
             .collection('feed')
             .get()
             .then((querySnapshot) => {
-                const data = querySnapshot.docs.map((doc) => doc.data());
+                const data = querySnapshot.docs.map((doc) => {
+                    const post = doc.data();
+                    post.id = doc.id;
+                    return post;
+                });
                 setFeed(data);
                 console.log(data);
             });
@@ -45,7 +49,7 @@ function Feed() {
             </div>
             <h1> </h1>
             <div className='posts-container'>
-                {feed && feed?.map((post) => <Post post={post} />)}
+                {feed && feed?.map((post) => <Post post={post} key={post.id} />)}
             </div>
             <div className='stories-container'>
                 <Stories />

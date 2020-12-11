@@ -59,5 +59,5 @@ export function AuthProvider({ children }) {
 }
 
 AuthProvider.propTypes = {
-    children: PropTypes.func.isRequired,
+    children: PropTypes.element.isRequired,
 };
