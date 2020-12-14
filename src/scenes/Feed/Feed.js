@@ -12,18 +12,11 @@ function Feed() {
     const [feed, setFeed] = useState(null);
 
     useEffect(() => {
-        // const unsubscribe = FirestoreService.streamGroceryListItems(groceryListId, {
-        //     next: (querySnapshot) => {
-        //         const updatedGroceryItems = querySnapshot.docs.map((docSnapshot)
-        //= > docSnapshot.data());
-        //         setGroceryItems(updatedGroceryItems);
-        //     },
-        //     error: () => setError('grocery-list-item-get-fail'),
-        // });
         const unsubscribe = firestore
             .collection('users')
             .doc(currentUser.uid)
             .collection('feed')
+            .orderBy('timestamp', 'desc')
             .get()
             .then((querySnapshot) => {
                 const data = querySnapshot.docs.map((doc) => {

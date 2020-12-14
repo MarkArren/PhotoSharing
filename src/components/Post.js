@@ -17,13 +17,13 @@ import { useAuth } from '../context/AuthConext';
 // TODO replace placeholder text and images with real image
 
 function Post({ post }) {
-    const { currentUser } = useAuth();
+    const { currentUser, currentUserInfo } = useAuth();
     const [showComments, setShowComments] = useState(false);
     const [comments, setComments] = useState(null);
     const [commentCount, setCommentCount] = useState(post.commentCount);
 
     const [commentInput, setCommentInput] = useState('');
-    const [hasLiked, setHasLiked] = useState(false);
+    const [hasLiked, setHasLiked] = useState(post.hasLiked);
     const [likeCount, setLikeCount] = useState(post.likeCount);
 
     const [height, setHeight] = useState(0);
@@ -63,7 +63,7 @@ function Post({ post }) {
             .collection('comments')
             .add({
                 comment: commentInput,
-                username: 'mark', // TODO add username
+                username: currentUserInfo.username,
                 timestamp: new Date(),
                 userUID: currentUser.uid,
             })
@@ -94,16 +94,32 @@ function Post({ post }) {
                         doc.ref.delete();
                     });
                     setLikeCount(likeCount - 1);
+
+                    // Unlike post in feed
+                    firestore
+                        .collection('users')
+                        .doc(currentUser.uid)
+                        .collection('feed')
+                        .doc(post.id)
+                        .set({ hasLiked: false }, { merge: true });
                 } else {
                     // Like post
                     post.post
                         .collection('likes')
                         .add({
-                            username: 'mark', // TODO add username
+                            username: currentUserInfo.username,
                             uid: currentUser.uid,
                             timestamp: new Date(),
                         })
                         .then();
+
+                    // Like post in feed
+                    firestore
+                        .collection('users')
+                        .doc(currentUser.uid)
+                        .collection('feed')
+                        .doc(post.id)
+                        .set({ hasLiked: true }, { merge: true });
                     setLikeCount(likeCount + 1);
                 }
             });
@@ -144,14 +160,14 @@ function Post({ post }) {
                             tabIndex='0'
                         >
                             {hasLiked ? (
-                                <VscHeart size='30px' type='submit' className='icon like' />
-                            ) : (
                                 <RiHeartFill
                                     size='30px'
                                     type='submit'
                                     className='icon'
                                     style={{ fill: 'red' }}
                                 />
+                            ) : (
+                                <VscHeart size='30px' type='submit' className='icon like' />
                             )}
                             {likeCount}
                         </span>

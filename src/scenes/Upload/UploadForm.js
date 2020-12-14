@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthConext';
 
 const UploadForm = () => {
     const { currentUser } = useAuth();
+    const { currentUserInfo } = useAuth();
     const [image, setImage] = useState(null);
     const [caption, setCaption] = useState('');
     const [progress, setProgress] = useState(0);
@@ -44,7 +45,48 @@ const UploadForm = () => {
                                 caption,
                                 timestamp: new Date(),
                             })
-                            .then(() => console.log('sucessfully written to user posts'));
+                            .then((doc) => {
+                                console.log('sucessfully written to user posts');
+
+                                // TODO Client side fan out of data to all users feed
+                                const { id } = doc;
+                                console.log(doc);
+                                // Get all users
+                                firestore
+                                    .collection('users')
+                                    .get()
+                                    .then((users) => {
+                                        if (!users.empty) {
+                                            // Loop through all users
+                                            users.forEach((userDoc) => {
+                                                const user = userDoc.data();
+                                                console.log(user);
+                                                console.log(userDoc);
+
+                                                // Add post to each users feed collection
+                                                firestore
+                                                    .collection('users')
+                                                    .doc(userDoc.id)
+                                                    .collection('feed')
+                                                    .doc(id)
+                                                    .set({
+                                                        caption,
+                                                        post: doc,
+                                                        url,
+                                                        user: {
+                                                            username: currentUserInfo.username,
+                                                            name: currentUserInfo.name,
+                                                        },
+                                                        commentCount: 0,
+                                                        likeCount: 0,
+                                                        hasLiked: false,
+                                                        topComments: [],
+                                                        timestamp: new Date(),
+                                                    });
+                                            });
+                                        }
+                                    });
+                            });
                     });
             },
         );
