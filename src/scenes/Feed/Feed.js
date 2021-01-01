@@ -44,9 +44,7 @@ function Feed() {
             <div className='posts-container'>
                 {feed && feed?.map((post) => <Post post={post} key={post.id} />)}
             </div>
-            <div className='stories-container'>
-                <Stories />
-            </div>
+            <Stories />
         </div>
     );
 }

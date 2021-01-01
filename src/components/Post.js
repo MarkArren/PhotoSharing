@@ -29,7 +29,7 @@ function Post({ post }) {
     const [height, setHeight] = useState(0);
 
     const viewComments = (refresh = false) => {
-        setHeight(document.getElementById(post?.post).clientHeight);
+        setHeight(document.getElementById(post?.id).clientHeight);
         // Fetch comments from server
         if ((!showComments || !refresh) && post.post) {
             post.post
@@ -129,7 +129,7 @@ function Post({ post }) {
 
     return (
         <div className='post-container'>
-            <div className='post' id={post?.post}>
+            <div className='post' id={post?.id}>
                 <div className='top'>
                     <div className='post-top-profilepic'>
                         <img src={`${process.env.PUBLIC_URL}avatar.png`} alt='Avatar' />

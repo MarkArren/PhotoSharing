@@ -47,7 +47,7 @@ body {
     padding: 0;
     color: $textColour;
     background-color: $backgroundColour;
-    font-size: 15px;
+    // font-size: 15px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
     @include scrollbar;
@@ -63,7 +63,7 @@ a {
     margin-left: 40px;
 }
 
-.stories-container {
-    float: right;
-    margin-right: 40px;
-}
+// .stories-container {
+//     float: right;
+//     margin-right: 40px;
+// }

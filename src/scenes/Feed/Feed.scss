@@ -1,6 +1,6 @@
 @import 'src/App.scss';
 
-.feed-selector{
+.feed-selector {
     height: 50px;
     padding: 10px 50px;
     font-size: 1.2em;
@@ -10,9 +10,13 @@
     align-items: center;
     border-bottom: hsl(0, 0%, 15%) 1px solid;
 
-    > div:first-child{
-        border-right: $borderColour 2px solid ;
+    > div:first-child {
+        border-right: $borderColour 2px solid;
         padding-right: 50px;
         margin-right: 50px;
     }
+}
+
+.posts-container {
+    margin-right: 10rem;
 }

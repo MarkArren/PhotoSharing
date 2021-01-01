@@ -1,41 +1,44 @@
 import './Stories.scss';
 import React from 'react';
-import StoryPreview from '../../../components/StoryPreview';
 
 function Stories() {
     return (
-        <div className='stories'>
-            <h1>Stories</h1>
-            <div className='row'>
-                <div className='column'>
-                    <StoryPreview />
+        <div className='stories-container'>
+            <h1>Username Featured Stories</h1>
+            <div className='stories'>
+                <div className='story-preview'>
+                    <img src='http://via.placeholder.com/168x280' alt='profile-pic' />
+                    <div className='story-preview-text'>
+                        <div className='username'>Username</div>
+                        <div className='timestamp'>5m ago</div>
+                    </div>
                 </div>
-                <div className='column'>
-                    <StoryPreview />
+                <div className='story-preview'>
+                    <img src='http://via.placeholder.com/168x280' alt='profile-pic' />
                 </div>
-            </div>
-            <div className='row 2'>
-                <div className='column'>
-                    <StoryPreview />
+                <div className='story-preview'>
+                    <img src='http://via.placeholder.com/168x280' alt='profile-pic' />
                 </div>
-                <div className='column'>
-                    <StoryPreview />
+                <div className='story-preview'>
+                    <img src='http://via.placeholder.com/168x280' alt='profile-pic' />
                 </div>
-            </div>
-            <div className='row 3'>
-                <div className='column'>
-                    <StoryPreview />
+                <div className='story-preview'>
+                    <img src='http://via.placeholder.com/168x280' alt='profile-pic' />
                 </div>
-                <div className='column'>
-                    <StoryPreview />
+                <div className='story-preview'>
+                    <img src='http://via.placeholder.com/168x280' alt='profile-pic' />
                 </div>
-            </div>
-            <div className='row 4'>
-                <div className='column'>
-                    <StoryPreview />
+                <div className='story-preview'>
+                    <img src='http://via.placeholder.com/168x280' alt='profile-pic' />
                 </div>
-                <div className='column'>
-                    <StoryPreview />
+                <div className='story-preview'>
+                    <img src='http://via.placeholder.com/168x280' alt='profile-pic' />
+                </div>
+                <div className='story-preview'>
+                    <img src='http://via.placeholder.com/168x280' alt='profile-pic' />
+                </div>
+                <div className='story-preview'>
+                    <img src='http://via.placeholder.com/168x280' alt='profile-pic' />
                 </div>
             </div>
         </div>
