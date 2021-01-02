@@ -132,7 +132,14 @@ function Post({ post }) {
             <div className='post' id={post?.id}>
                 <div className='top'>
                     <div className='post-top-profilepic'>
-                        <img src={`${process.env.PUBLIC_URL}avatar.png`} alt='Avatar' />
+                        <img
+                            src={
+                                post?.user?.profile_pic
+                                    ? post.user.profile_pic
+                                    : 'http://via.placeholder.com/360x360'
+                            }
+                            alt='Avatar'
+                        />
                     </div>
                     <div className='post-top-username'>
                         <span className='name'>{post?.user?.name}</span>

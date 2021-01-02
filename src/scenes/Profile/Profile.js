@@ -1,20 +1,63 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import './Profile.scss';
 import { useAuth } from '../../context/AuthConext';
 import Stories from '../Feed/components/Stories';
+import Post from '../../components/Post';
+import { firestore } from '../../services/firebase';
 
 function Profile() {
     const { currentUser, currentUserInfo } = useAuth();
+    const [posts, setPosts] = useState(null);
+    const [currentPost, setCurrentPost] = useState();
+    const [showPost, setShowPost] = useState(false);
+
+    useEffect(() => {
+        const unsubscribe = firestore
+            .collection('users')
+            .doc(currentUser.uid)
+            .collection('posts')
+            .orderBy('timestamp', 'desc')
+            .get()
+            .then((querySnapshot) => {
+                const data = querySnapshot.docs.map((doc) => {
+                    const post = doc.data();
+                    post.id = doc.id;
+
+                    // Add specific post
+                    post.user = {
+                        name: currentUserInfo?.name,
+                        username: currentUserInfo?.username,
+                    };
+                    return post;
+                });
+                setPosts(data);
+                console.log(data);
+            });
+
+        return unsubscribe;
+    }, [setPosts]);
+
+    const loadPost = (e) => {
+        setCurrentPost(posts[e.currentTarget.id]);
+        setShowPost(true);
+    };
 
     return (
-        <div>
+        <div className='profile-page'>
             <Navbar />
             <div className='profile-container'>
                 <div className='profile'>
                     <div className='profile-image'>
-                        <img src='http://via.placeholder.com/200x200' alt='profile-pic' />
+                        <img
+                            src={
+                                currentUserInfo?.profile_pic
+                                    ? currentUserInfo?.profile_pic
+                                    : 'http://via.placeholder.com/200x200'
+                            }
+                            alt='profile-pic'
+                        />
                     </div>
                     <div className='profile-name'>
                         <span>{currentUserInfo?.username}</span>
@@ -22,7 +65,7 @@ function Profile() {
                         <span className='name'>{currentUserInfo?.name}</span>
                     </div>
                     <div className='profile-interaction'>
-                        <Link to='/logout'>
+                        <Link to='/edit'>
                             <button type='button'>Edit Profile</button>
                         </Link>
                         <Link to='/logout'>
@@ -58,26 +101,27 @@ function Profile() {
                 </div>
                 <Stories />
                 <div className='gallery'>
+                    {posts
+                        && posts?.map((post, index) => (
+                            <div
+                                className='gallery-item'
+                                key={post.id}
+                                id={index}
+                                onClick={loadPost}
+                                onKeyPress={loadPost}
+                                role='button'
+                                tabIndex='0'
+                            >
+                                <img src={post.url} alt='post' />
+                            </div>
+                        ))}
                     <div className='gallery-item'>
                         <img src='http://via.placeholder.com/293x293' alt='placeholder' />
-                    </div>
-                    <div className='gallery-item'>
-                        <img src='http://via.placeholder.com/293x293' alt='placeholder' />
-                    </div>
-                    <div className='gallery-item'>
-                        <img src='http://via.placeholder.com/293x293' alt='placeholder' />
-                    </div>
-                    <div className='gallery-item'>
-                        <img src='http://via.placeholder.com/293x293' alt='placeholder' />
-                    </div>
-                    <div className='gallery-item'>
-                        <img src='http://via.placeholder.com/293x293' alt='placeholder' />
-                    </div>
-                    <div className='gallery-item'>
-                        <img src='http://via.placeholder.com/293x293' alt='placeholder' />
+                        <div className='gallery-item-info'>0 likes</div>
                     </div>
                 </div>
             </div>
+            {currentPost && showPost ? <Post post={currentPost} /> : null}
         </div>
     );
 }
