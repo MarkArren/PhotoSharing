@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { AiOutlineClose } from 'react-icons/ai';
+import { VscHeart } from 'react-icons/vsc';
+import { BsChat } from 'react-icons/bs';
 import Navbar from '../../components/Navbar';
 import './Profile.scss';
 import { useAuth } from '../../context/AuthConext';
@@ -25,10 +28,11 @@ function Profile() {
                     const post = doc.data();
                     post.id = doc.id;
 
-                    // Add specific post
+                    // Add owner of post
                     post.user = {
                         name: currentUserInfo?.name,
                         username: currentUserInfo?.username,
+                        uid: currentUser.uid,
                     };
                     return post;
                 });
@@ -113,15 +117,44 @@ function Profile() {
                                 tabIndex='0'
                             >
                                 <img src={post.url} alt='post' />
+                                <div className='gallery-item-info'>
+                                    <span>
+                                        <VscHeart className='icon' />
+                                        {post.likeCount ? post.likeCount : 0}
+                                    </span>
+                                    <span>
+                                        <BsChat className='icon' />
+                                        {post.commentCount ? post.likeCount : 0}
+                                    </span>
+                                </div>
                             </div>
                         ))}
                     <div className='gallery-item'>
                         <img src='http://via.placeholder.com/293x293' alt='placeholder' />
-                        <div className='gallery-item-info'>0 likes</div>
+                        <div className='gallery-item-info'>
+                            <span>
+                                <VscHeart className='icon' />
+                                0
+                            </span>
+                            <span>
+                                <BsChat className='icon' />
+                                0
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
-            {currentPost && showPost ? <Post post={currentPost} /> : null}
+            {currentPost && showPost ? (
+                <div className='current-post'>
+                    <AiOutlineClose
+                        className='close-icon'
+                        onClick={() => {
+                            setShowPost(false);
+                        }}
+                    />
+                    <Post post={currentPost} />
+                </div>
+            ) : null}
         </div>
     );
 }
