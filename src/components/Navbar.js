@@ -6,8 +6,10 @@ import { MdNotifications } from 'react-icons/md';
 import { AiOutlineUser, AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import { IoAddCircleOutline } from 'react-icons/io5';
 import { IconContext } from 'react-icons';
+import PropTypes from 'prop-types';
 
-function Navbar() {
+function Navbar(props) {
+    const { className } = props;
     const [navMobileOpen, setNavMobileOpen] = useState(false);
     const searchRef = useRef();
 
@@ -18,7 +20,7 @@ function Navbar() {
     }
 
     return (
-        <div className='navbar'>
+        <div className={`navbar ${className || ''}`}>
             <Link to='/' className='nav-left'>
                 <h3>ProjectName</h3>
             </Link>
@@ -75,3 +77,11 @@ function Navbar() {
 }
 
 export default Navbar;
+
+Navbar.propTypes = {
+    className: PropTypes.string,
+};
+
+Navbar.defaultProps = {
+    className: '',
+};

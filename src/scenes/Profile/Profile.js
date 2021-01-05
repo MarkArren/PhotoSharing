@@ -50,15 +50,15 @@ function Profile() {
 
     return (
         <div className='profile-page'>
-            <Navbar />
-            <div className='profile-container'>
+            <Navbar className={showPost ? 'blur' : ''} />
+            <div className={`profile-container ${showPost ? 'blur' : ''}`}>
                 <div className='profile'>
                     <div className='profile-image'>
                         <img
                             src={
                                 currentUserInfo?.profile_pic
                                     ? currentUserInfo?.profile_pic
-                                    : 'http://via.placeholder.com/200x200'
+                                    : 'https://via.placeholder.com/200x200'
                             }
                             alt='profile-pic'
                         />
@@ -79,14 +79,14 @@ function Profile() {
                     <div className='profile-bio'>{currentUserInfo?.bio}</div>
                     <div className='profile-stats'>
                         <div>
-                            <span className='profile-stat'>
+                            <span className='profile-stats-stat'>
                                 {currentUserInfo?.followers}
                                 &nbsp;
                             </span>
                             Followers
                         </div>
                         <div>
-                            <span className='profile-stat'>
+                            <span className='profile-stats-stat'>
                                 &nbsp;
                                 {currentUserInfo?.following}
                                 &nbsp;
@@ -94,7 +94,7 @@ function Profile() {
                             Following
                         </div>
                         <div>
-                            <span className='profile-stat'>
+                            <span className='profile-stats-stat'>
                                 &nbsp;
                                 {currentUserInfo?.likes}
                                 &nbsp;
@@ -130,7 +130,7 @@ function Profile() {
                             </div>
                         ))}
                     <div className='gallery-item'>
-                        <img src='http://via.placeholder.com/293x293' alt='placeholder' />
+                        <img src='https://via.placeholder.com/293x293' alt='placeholder' />
                         <div className='gallery-item-info'>
                             <span>
                                 <VscHeart className='icon' />
@@ -145,7 +145,17 @@ function Profile() {
                 </div>
             </div>
             {currentPost && showPost ? (
-                <div className='current-post'>
+                <div
+                    className='current-post'
+                    onClick={() => {
+                        setShowPost(false);
+                    }}
+                    onKeyPress={() => {
+                        setShowPost(false);
+                    }}
+                    tabIndex='0'
+                    role='button'
+                >
                     <AiOutlineClose
                         className='close-icon'
                         onClick={() => {

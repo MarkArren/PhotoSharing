@@ -1,220 +1,218 @@
 @import '../../App.scss';
 
-.profile-page {
-    .profile-container {
-        padding: 0 2rem;
-        display: grid;
-        grid-template-columns: auto auto;
-        grid-template-rows: auto 1fr;
+.profile-container {
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto 1fr;
+}
 
-        .profile {
-            max-width: 50rem;
-            margin: 0 0 0 auto;
-            padding: 2rem 2rem;
-            display: grid;
-            grid-template-columns: 0.75fr 1.5fr 0.75fr;
-            grid-template-rows: auto auto 1fr;
-            grid-row-gap: 0.5rem;
-            grid-column-gap: 1.5rem;
+.profile {
+    max-width: 50rem;
+    margin: 0 0 0 auto;
+    padding: 2rem 2rem;
+    display: grid;
+    grid-template-columns: 0.75fr 1.5fr 0.75fr;
+    grid-template-rows: auto auto 1fr;
+    grid-row-gap: 0.5rem;
+    grid-column-gap: 1.5rem;
 
-            .profile-image {
-                grid-row: 1 / 4;
-                img {
-                    border-radius: 50%;
-                    width: 100%;
-                    height: auto;
-                    // display: block;
-                    object-fit: cover;
-                }
-            }
-
-            .profile-name {
-                font-size: 1.5rem;
-                .name {
-                    color: $textColour2;
-                }
-            }
-            .profile-stats {
-                display: flex;
-                flex-wrap: wrap;
-                .profile-stat {
-                    flex: 1;
-                    font-weight: bolder;
-                }
-            }
-            .profile-interaction {
-                grid-column: 3;
-                grid-row: 1/4;
-
-                a {
-                    width: 100%;
-                }
-
-                button {
-                    background-color: $accentColour2;
-                    color: $textColour;
-                    border: none;
-                    border-radius: 5px;
-                    padding: 1rem 3rem;
-                    outline: none;
-                    margin-bottom: 10px;
-                    width: 100%;
-                    box-sizing: border-box;
-                    cursor: pointer;
-                }
-            }
-            .profile-bio {
-            }
-        }
-
-        .gallery {
-            max-width: 50rem;
-            margin: 0 0 0 auto;
-            padding: 0 2rem;
-            display: grid;
-            // grid-template-columns: repeat(auto-fit, minmax(293px, 1fr));
-            grid-template-columns: repeat(3, 1fr);
-            grid-gap: 1.5rem;
-            align-self: baseline;
-
-            .gallery-item {
-                position: relative;
-                img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                }
-                .gallery-item-info {
-                    display: none;
-                    position: absolute;
-                    top: 0;
-                    width: 100%;
-                    height: 100%;
-                    align-items: center;
-                    justify-content: space-evenly;
-                    .icon {
-                        font-size: 1.4rem;
-                        vertical-align: text-top;
-                        margin-right: 0.25rem;
-                    }
-                }
-                &:hover .gallery-item-info {
-                    display: flex;
-                    &:hover {
-                        background-color: rgba(0, 0, 0, 0.3);
-                    }
-                }
-            }
-        }
-        .stories-container {
-            grid-column: 2;
-            grid-row: 1/3;
+    &-image {
+        grid-row: 1 / 4;
+        > img {
+            border-radius: 50%;
+            width: 100%;
+            height: auto;
+            // display: block;
+            object-fit: cover;
         }
     }
-    .current-post {
-        .post-container {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: $backgroundColour;
+
+    &-name {
+        font-size: 1.5rem;
+        .name {
+            color: $textColour2;
         }
-        .close-icon {
-            vertical-align: middle;
-            font-size: 1.75rem;
-            color: hsl(0, 0%, 90%);
-            display: flex;
-            align-items: center;
+    }
+    &-stats {
+        display: flex;
+        flex-wrap: wrap;
+        &-stat {
+            flex: 1;
+            font-weight: bolder;
+        }
+    }
+    &-interaction {
+        grid-column: 3;
+        grid-row: 1/4;
 
-            position: fixed;
-            top: 1.5rem;
-            right: 1.5rem;
+        > a {
+            width: 100%;
+        }
 
+        button {
+            background-color: $accentColour2;
+            color: $textColour;
+            border: none;
+            border-radius: 5px;
+            padding: 1rem 3rem;
+            outline: none;
+            margin-bottom: 10px;
+            width: 100%;
+            box-sizing: border-box;
             cursor: pointer;
         }
     }
-    > *:not(:last-child) {
-        opacity: 40%;
-        overflow: hidden;
-        pointer-events: none;
+    &-bio {
     }
 }
 
-@media (max-width: 56rem) {
-    .profile-page {
-        .profile-container {
-            grid-template-columns: auto;
-            grid-template-rows: auto;
-            padding: 0;
-            .profile {
-                padding: 1rem 1rem;
-                margin: 0;
-                grid-template-columns: auto 1fr;
-                grid-column-gap: 1.5rem;
-                grid-row-gap: 1rem;
-                .profile-image {
-                    grid-row: 1 / 2;
-                    img {
-                        max-width: 6rem;
-                    }
-                }
-                .profile-name {
-                    overflow: hidden;
-                }
-                .profile-stats {
-                    justify-content: space-evenly;
-                    grid-column: 1 / -1;
-                }
-                .profile-interaction {
-                    grid-column: 1 / -1;
-                    grid-row: auto;
-                    display: flex;
-                    button {
-                        padding: 0.75rem 2rem;
-                        margin-bottom: 0px;
-                        flex: 1;
-                    }
-                    :first-child {
-                        margin-right: 1rem;
-                    }
-                }
-                .profile-bio {
-                    grid-column: 1 / -1;
-                }
-            }
+.gallery {
+    max-width: 50rem;
+    margin: 0 0 0 auto;
+    padding: 0 2rem;
+    display: grid;
+    // grid-template-columns: repeat(auto-fit, minmax(293px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 1.5rem;
+    align-self: baseline;
 
-            .gallery {
-                padding: 0 0.5rem;
-                grid-gap: 0.5rem;
-                margin: 0 auto;
-                max-width: none;
-            }
-
-            .stories-container {
-                grid-row: auto;
-                grid-column: auto;
+    &-item {
+        position: relative;
+        > img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        &-info {
+            display: none;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: space-evenly;
+            .icon {
+                font-size: 1.4rem;
+                vertical-align: text-top;
+                margin-right: 0.25rem;
             }
         }
+        &:hover &-info {
+            display: flex;
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.3);
+            }
+        }
+    }
+}
+.stories-container {
+    grid-column: 2;
+    grid-row: 1/3;
+}
+
+.current-post {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    .post-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: $backgroundColour;
+    }
+    .close-icon {
+        vertical-align: middle;
+        font-size: 1.75rem;
+        color: hsl(0, 0%, 90%);
+        display: flex;
+        align-items: center;
+
+        position: fixed;
+        top: 1.5rem;
+        right: 1.5rem;
+
+        cursor: pointer;
+    }
+}
+.blur {
+    opacity: 40%;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+@media (max-width: 56rem) {
+    .profile-container {
+        grid-template-columns: auto;
+        grid-template-rows: auto;
+        padding: 0;
+    }
+    .profile {
+        padding: 1rem 1rem;
+        margin: 0;
+        grid-template-columns: auto 1fr;
+        grid-column-gap: 1.5rem;
+        grid-row-gap: 1rem;
+        &-image {
+            grid-row: 1 / 2;
+            > img {
+                max-width: 6rem;
+            }
+        }
+        &-name {
+            overflow: hidden;
+        }
+        &-stats {
+            justify-content: space-evenly;
+            grid-column: 1 / -1;
+        }
+        &-interaction {
+            grid-column: 1 / -1;
+            grid-row: auto;
+            display: flex;
+            button {
+                padding: 0.75rem 2rem;
+                margin-bottom: 0px;
+                flex: 1;
+            }
+
+            > :first-child {
+                margin-right: 1rem;
+            }
+        }
+        &-bio {
+            grid-column: 1 / -1;
+        }
+    }
+
+    .gallery {
+        padding: 0 0.5rem;
+        grid-gap: 0.5rem;
+        margin: 0 auto;
+        max-width: none;
+    }
+
+    .stories-container {
+        grid-row: auto;
+        grid-column: auto;
     }
 }
 
 @media (max-width: 25rem) {
-    .profile-page {
-        .profile-container {
-            .profile {
-                padding: 0.5rem 0.5rem;
-                .profile-interaction {
-                    flex-wrap: wrap;
-                    :first-child {
-                        margin-right: 0;
-                        margin-bottom: 0.25rem;
-                    }
-                }
-                .gallery {
-                    padding: 0.25rem 0.25rem;
-                    grid-gap: 0.25rem;
-                }
+    .profile {
+        padding: 0.5rem 0.5rem;
+        &-interaction {
+            flex-wrap: wrap;
+            > :first-child {
+                margin-right: 0;
+                margin-bottom: 0.25rem;
             }
         }
+    }
+    .gallery {
+        padding: 0.25rem 0.25rem;
+        grid-gap: 0.25rem;
     }
 }
