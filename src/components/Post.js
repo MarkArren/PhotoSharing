@@ -14,8 +14,6 @@ import { firestore } from '../services/firebase';
 import { useAuth } from '../context/AuthConext';
 // import { firestore } from '../services/firebase';
 
-// TODO replace placeholder text and images with real image
-
 function Post({ post }) {
     const { currentUser, currentUserInfo } = useAuth();
     const [showComments, setShowComments] = useState(false);
@@ -30,9 +28,20 @@ function Post({ post }) {
 
     const viewComments = (refresh = false) => {
         setHeight(document.getElementById(post?.id).clientHeight);
+
+        if (!post?.user?.uid) {
+            console.log('no uid for post');
+            return;
+        }
+
         // Fetch comments from server
-        if ((!showComments || !refresh) && post.post) {
-            post.post
+        if ((!showComments || !refresh) && post?.user?.uid) {
+            firestore
+                .collection('users')
+                .doc(post?.user?.uid)
+                .collection('posts')
+                .doc(post.id)
+                // post.post
                 .collection('comments')
                 .orderBy('timestamp', 'asc')
                 .get()
@@ -58,14 +67,25 @@ function Post({ post }) {
         if (!commentInput) {
             return;
         }
+        if (!post?.user?.uid) {
+            return;
+        }
 
-        post.post
+        firestore
+            .collection('users')
+            .doc(post?.user?.uid)
+            .collection('posts')
+            .doc(post.id)
+            // post.post
             .collection('comments')
             .add({
                 comment: commentInput,
-                username: currentUserInfo.username,
+                user: {
+                    username: currentUserInfo.username,
+                    name: currentUserInfo.name,
+                    uid: currentUser.uid,
+                },
                 timestamp: new Date(),
-                userUID: currentUser.uid,
             })
             .then(() => {
                 viewComments(false);
@@ -83,7 +103,12 @@ function Post({ post }) {
         setHasLiked(!hasLiked);
 
         // TODO change to cloud function
-        post.post
+        firestore
+            .collection('users')
+            .doc(post?.user?.uid)
+            .collection('posts')
+            .doc(post.id)
+            // post.post
             .collection('likes')
             .where('uid', '==', currentUser.uid)
             .get()
@@ -104,11 +129,19 @@ function Post({ post }) {
                         .set({ hasLiked: false }, { merge: true });
                 } else {
                     // Like post
-                    post.post
+                    firestore
+                        .collection('users')
+                        .doc(post?.user?.uid)
+                        .collection('posts')
+                        .doc(post.id)
+                        // post.post
                         .collection('likes')
                         .add({
-                            username: currentUserInfo.username,
-                            uid: currentUser.uid,
+                            user: {
+                                username: currentUserInfo.username,
+                                name: currentUserInfo.name,
+                                uid: currentUser.uid,
+                            },
                             timestamp: new Date(),
                         })
                         .then();

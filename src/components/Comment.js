@@ -38,7 +38,7 @@ const Comment = ({ comment }) => {
                 <img src={`${process.env.PUBLIC_URL}avatar.png`} alt='Avatar' />
             </div>
             <div>
-                <span className='comment-username'>{comment?.username}</span>
+                <span className='comment-username'>{comment?.user?.username}</span>
                 &nbsp;
                 {comment?.comment}
             </div>
@@ -49,8 +49,12 @@ const Comment = ({ comment }) => {
 
 Comment.propTypes = {
     comment: PropTypes.shape({
-        username: PropTypes.string,
         comment: PropTypes.string,
+        user: PropTypes.shape({
+            username: PropTypes.string,
+            name: PropTypes.string,
+            uid: PropTypes.string,
+        }),
         timestamp: PropTypes.shape({
             nanoseconds: PropTypes.number,
             seconds: PropTypes.number,
@@ -61,8 +65,8 @@ Comment.propTypes = {
 // Specifies the default values for props:
 Comment.defaultProps = {
     comment: PropTypes.shape({
-        username: 'Username loading...',
         comment: 'Comment loading...',
+        user: { username: '...', name: '...', uid: 0 },
         timestamp: { seconds: 0, nanoseconds: 0 },
     }),
 };

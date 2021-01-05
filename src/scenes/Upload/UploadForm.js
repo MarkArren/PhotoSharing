@@ -76,6 +76,7 @@ const UploadForm = () => {
                                                         user: {
                                                             username: currentUserInfo.username,
                                                             name: currentUserInfo.name,
+                                                            uid: currentUser.uid,
                                                         },
                                                         commentCount: 0,
                                                         likeCount: 0,
