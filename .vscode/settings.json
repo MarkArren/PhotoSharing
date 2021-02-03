@@ -1,4 +1,6 @@
 {
     "eslint.lintTask.enable": true,
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "eslint.workingDirectories": [{ "mode": "auto" }],
+    "editor.codeActionsOnSave": { "source.fixAll.eslint": true }, 
 }
