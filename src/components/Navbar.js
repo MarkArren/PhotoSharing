@@ -7,8 +7,10 @@ import { AiOutlineUser, AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import { IoAddCircleOutline } from 'react-icons/io5';
 import { IconContext } from 'react-icons';
 import PropTypes from 'prop-types';
+import { useAuth } from '../context/AuthConext';
 
 function Navbar(props) {
+    const { currentUserInfo } = useAuth();
     const { className } = props;
     const [navMobileOpen, setNavMobileOpen] = useState(false);
     const searchRef = useRef();
@@ -42,7 +44,7 @@ function Navbar(props) {
                 <div className='nav-icon'>
                     <MdNotifications />
                 </div>
-                <Link to='/profile' className='nav-icon'>
+                <Link to={`/${currentUserInfo?.username}`} className='nav-icon'>
                     <AiOutlineUser />
                 </Link>
             </div>

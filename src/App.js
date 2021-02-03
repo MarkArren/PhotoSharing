@@ -23,13 +23,14 @@ function App() {
                     <Switch>
                         <PrivateRoute exact path='/' component={Feed} />
                         <PrivateRoute path='/messages' component={Messages} />
-                        <PrivateRoute path='/profile' component={Profile} />
+                        {/* <PrivateRoute path='/profile' component={Profile} /> */}
                         <Route path='/login' component={Login} />
                         <Route path='/signup' component={Signup} />
                         <Route path='/password-reset' component={ResetPassword} />
                         <PrivateRoute path='/logout' component={Logout} />
                         <PrivateRoute path='/upload' component={Upload} />
                         <PrivateRoute path='/edit' component={EditProfile} />
+                        <PrivateRoute path='/:username' component={Profile} />
                     </Switch>
                 </Router>
             </div>
