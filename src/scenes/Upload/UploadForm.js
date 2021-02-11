@@ -77,6 +77,8 @@ const UploadForm = () => {
                                                             username: currentUserInfo.username,
                                                             name: currentUserInfo.name,
                                                             uid: currentUser.uid,
+                                                            // eslint-disable-next-line max-len
+                                                            profile_pic: currentUserInfo.profile_pic,
                                                         },
                                                         commentCount: 0,
                                                         likeCount: 0,

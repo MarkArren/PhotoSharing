@@ -10,25 +10,45 @@ import './Feed.scss';
 function Feed() {
     const { currentUser } = useAuth();
     const [feed, setFeed] = useState(null);
+    const [feedType, setFeedType] = useState(0);
 
     useEffect(() => {
-        const unsubscribe = firestore
-            .collection('users')
-            .doc(currentUser.uid)
-            .collection('feed')
-            .orderBy('timestamp', 'desc')
-            .get()
-            .then((querySnapshot) => {
-                const data = querySnapshot.docs.map((doc) => {
-                    const post = doc.data();
-                    post.id = doc.id;
-                    return post;
+        if (feedType === 0) {
+            const unsubscribe = firestore
+                .collection('users')
+                .doc(currentUser.uid)
+                .collection('feed')
+                .orderBy('timestamp', 'desc')
+                .get()
+                .then((querySnapshot) => {
+                    const data = querySnapshot.docs.map((doc) => {
+                        const post = doc.data();
+                        post.id = doc.id;
+                        return post;
+                    });
+                    setFeed(data);
+                    console.log(data);
                 });
-                setFeed(data);
-                console.log(data);
-            });
 
-        return unsubscribe;
+            return unsubscribe;
+        } if (feedType === 1) {
+            const unsubscribe = firestore
+                .collection('users')
+                .doc(currentUser.uid)
+                .collection('feed')
+                .orderBy('timestamp', 'desc')
+                .get()
+                .then((querySnapshot) => {
+                    const data = querySnapshot.docs.map((doc) => {
+                        const post = doc.data();
+                        post.id = doc.id;
+                        return post;
+                    });
+                    setFeed(data);
+                    console.log(data);
+                });
+            return unsubscribe;
+        }
     }, [setFeed]);
 
     // console.log(feed);
@@ -40,11 +60,12 @@ function Feed() {
                 <div>Following</div>
                 <div>For You</div>
             </div>
-            <h1> </h1>
-            <div className='posts-container'>
-                {feed && feed?.map((post) => <Post post={post} key={post.id} />)}
+            <div className='feed'>
+                <div className='feed-posts'>
+                    {feed && feed?.map((post) => <Post post={post} key={post.id} />)}
+                </div>
+                <Stories />
             </div>
-            <Stories />
         </div>
     );
 }

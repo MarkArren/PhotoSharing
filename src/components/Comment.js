@@ -11,38 +11,38 @@ const Comment = ({ comment }) => {
         let interval = seconds / 31536000;
 
         if (interval > 1) {
-            return `${Math.floor(interval)} years ago`;
+            return `${Math.floor(interval)}y`;
         }
         interval = seconds / 2592000;
         if (interval > 1) {
-            return `${Math.floor(interval)} months ago`;
+            return `${Math.floor(interval)}mo`;
         }
         interval = seconds / 86400;
         if (interval > 1) {
-            return `${Math.floor(interval)} days ago`;
+            return `${Math.floor(interval)}d`;
         }
         interval = seconds / 3600;
         if (interval > 1) {
-            return `${Math.floor(interval)} hours ago`;
+            return `${Math.floor(interval)}h`;
         }
         interval = seconds / 60;
         if (interval > 1) {
-            return `${Math.floor(interval)} minutes ago`;
+            return `${Math.floor(interval)}m`;
         }
-        return `${Math.floor(seconds)} seconds ago`;
+        return `${Math.floor(seconds)}s`;
     };
 
     return (
         <div className='comment'>
-            <div className='comment-profilepic'>
+            <a href={comment?.user?.username} className='comment-profilepic'>
                 <img src={`${process.env.PUBLIC_URL}avatar.png`} alt='Avatar' />
-            </div>
+            </a>
             <div>
-                <span className='comment-username'>{comment?.user?.username}</span>
-                &nbsp;
-                {comment?.comment}
+                <a href={comment?.user?.username} className='comment-username'>{comment?.user?.username}</a>
+                <span className='comment-text'>{comment?.comment}</span>
+                <span className='comment-timestamp'>{timeSince(comment?.timestamp)}</span>
             </div>
-            <span className='comment-timestamp'>{timeSince(comment?.timestamp)}</span>
+
         </div>
     );
 };

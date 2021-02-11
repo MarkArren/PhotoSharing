@@ -17,6 +17,41 @@
     }
 }
 
-.posts-container {
-    margin-right: 10rem;
+.post-container{
+    margin-bottom: 4rem;
+}
+
+// .posts-container {
+//     margin-right: 10rem;
+// }
+
+.feed{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.feed-posts{
+    margin: 1rem;
+}
+
+@media (max-width: 56rem) {
+    .feed{
+        flex-direction: column-reverse;
+    }
+    .feed-posts{
+        margin: 0rem;
+    }
+    .post-container{
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 25rem) {
+    .post{
+        border: none;
+    }
+    .post-container{
+        margin-bottom: .5rem;
+    }
 }

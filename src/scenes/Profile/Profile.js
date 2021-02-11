@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { AiOutlineClose } from 'react-icons/ai';
 import { VscHeart } from 'react-icons/vsc';
@@ -18,6 +18,7 @@ function Profile(props) {
     const [showPost, setShowPost] = useState(false);
     const [user, setUser] = useState(null);
     const [userExists, setUserExists] = useState(true);
+    const [doesFollow, setDoesFollow] = useState(false);
 
     async function followUser() {
         if (!currentUser || !user) {
@@ -33,6 +34,7 @@ function Profile(props) {
             .collection('following')
             .doc(user?.uid);
 
+        // Transaction to unfollow/ follow user
         try {
             await firestore.runTransaction(async (t) => {
                 const docFollowers = await t.get(followersRef);
@@ -45,6 +47,7 @@ function Profile(props) {
                     const tempUser = user;
                     tempUser.followers -= 1;
                     setUser({ ...tempUser });
+                    setDoesFollow(false);
                 } else {
                     // Add follow to target users profile
                     t.set(followersRef, {
@@ -67,44 +70,13 @@ function Profile(props) {
                     const tempUser = user;
                     tempUser.followers += 1;
                     setUser({ ...tempUser });
+                    setDoesFollow(true);
                 }
             });
             console.log('Follow/ Unfollow successful!');
         } catch (e) {
             console.log('Follow/ Unfollow failure:', e);
         }
-
-        // TODO change to cloud function
-        // TODO could add transaction
-        // Check if user is following already
-        // firestore
-        //     .collection('users')
-        //     .doc(user?.uid)
-        //     .collection('followers')
-        //     .doc(currentUser?.uid)
-        //     .get()
-        //     .then((doc) => {
-        //         if (doc.exists) {
-        //             // Unfollow user
-        //             doc.ref.delete();
-        //             const tempUser = user;
-        //             tempUser.followers -= 1;
-        //             setUser({ ...tempUser });
-        //         } else {
-        //             // Follow user
-        //             doc.ref.set({
-        //                 user: {
-        //                     username: currentUserInfo.username,
-        //                     name: currentUserInfo.name,
-        //                     uid: currentUser.uid,
-        //                 },
-        //                 timestamp: new Date(),
-        //             });
-        //             const tempUser = user;
-        //             tempUser.followers += 1;
-        //             setUser({ ...tempUser });
-        //         }
-        //     });
     }
 
     function messageUser() {
@@ -117,10 +89,8 @@ function Profile(props) {
             return false;
         }
 
-        setUser({ username: props.match.params.username });
         const unsubscribe = firestore
             .collection('users')
-            // eslint-disable-next-line react/prop-types
             .where('username', '==', props.match.params.username)
             .get()
             .then((querySnapshot) => {
@@ -128,10 +98,12 @@ function Profile(props) {
                     // Couldn't find username
                     setUserExists(false);
                 } else {
+                    // Set target user info
                     const tempUser = querySnapshot.docs[0].data();
                     tempUser.uid = querySnapshot.docs[0].id;
                     setUser(tempUser);
 
+                    // Get targer users posts
                     firestore.doc(`users/${tempUser.uid}`).collection('posts').orderBy('timestamp', 'desc')
                         .get()
                         .then((querySnapshot2) => {
@@ -150,6 +122,11 @@ function Profile(props) {
                             setPosts(data);
                             console.log(data);
                         });
+
+                    // Check if user followers target user
+                    firestore.doc(`users/${tempUser.uid}/followers/${currentUser?.uid}`).get().then((doc) => {
+                        if (doc.exists) { setDoesFollow(true); }
+                    });
                 }
             }, () => {
                 // Couldn't find username
@@ -197,7 +174,9 @@ function Profile(props) {
                                 </div>
                             ) : (
                                 <div className='profile-interaction'>
-                                    <button type='button' onClick={followUser}>Follow</button>
+                                    <button type='button' onClick={followUser}>
+                                        {doesFollow ? 'Following' : 'Follow'}
+                                    </button>
                                     <button type='button' onClick={messageUser}>Message</button>
                                 </div>
                             )}
@@ -297,5 +276,21 @@ function Profile(props) {
             : <h1>Page does not exist</h1>
     );
 }
+
+Profile.propTypes = {
+    match: PropTypes.shape({
+        params: PropTypes.shape({
+            username: PropTypes.string,
+        }),
+    }),
+};
+
+Profile.defaultProps = {
+    match: PropTypes.shape({
+        params: PropTypes.shape({
+            username: '',
+        }),
+    }),
+};
 
 export default Profile;
