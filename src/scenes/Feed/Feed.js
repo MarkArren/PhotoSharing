@@ -31,24 +31,23 @@ function Feed() {
                 });
 
             return unsubscribe;
-        } if (feedType === 1) {
-            const unsubscribe = firestore
-                .collection('users')
-                .doc(currentUser.uid)
-                .collection('feed')
-                .orderBy('timestamp', 'desc')
-                .get()
-                .then((querySnapshot) => {
-                    const data = querySnapshot.docs.map((doc) => {
-                        const post = doc.data();
-                        post.id = doc.id;
-                        return post;
-                    });
-                    setFeed(data);
-                    console.log(data);
-                });
-            return unsubscribe;
         }
+        const unsubscribe = firestore
+            .collection('users')
+            .doc(currentUser.uid)
+            .collection('feed')
+            .orderBy('timestamp', 'desc')
+            .get()
+            .then((querySnapshot) => {
+                const data = querySnapshot.docs.map((doc) => {
+                    const post = doc.data();
+                    post.id = doc.id;
+                    return post;
+                });
+                setFeed(data);
+                console.log(data);
+            });
+        return unsubscribe;
     }, [setFeed]);
 
     // console.log(feed);
