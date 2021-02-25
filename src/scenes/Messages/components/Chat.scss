@@ -1,5 +1,6 @@
 @import 'src/App.scss';
 
+$bubble-colour: hsl(0, 0%, 15%);
 
 .chat-wrapper{
     height: 100%;
@@ -26,6 +27,9 @@
     .chat-middle{
         flex: 0 1 auto;
         height: 100%;
+        padding: 1rem;
+        overflow-y: scroll;
+        @include scrollbar
     }
 
     .chat-bottom{
@@ -46,5 +50,24 @@
             color: $textColour;
             text-align: left;
         }
+    }
+}
+
+.bubble {
+    padding: .8rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid $borderColour;
+    border-radius: 20px;
+    clear: both;
+    &.you {
+        float: left;
+        background-color: $backgroundColour;
+        align-self: flex-start;
+
+    }
+    &.me {
+        float: right;
+        background-color: $accentColour2;
+        align-self: flex-end;
     }
 }

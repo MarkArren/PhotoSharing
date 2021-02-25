@@ -51,6 +51,7 @@ export function stringFromTime(timestamp, short = false) {
     return `${Math.floor(interval)} second ago`;
 }
 
-export function test() {
-    return 1 + 1;
+// Pairs user IDs together
+export function pairUID(fromUID, toUID) {
+    return [fromUID, toUID].sort().join('_').toString();
 }
