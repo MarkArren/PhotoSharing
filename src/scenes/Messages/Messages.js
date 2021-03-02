@@ -17,7 +17,7 @@ const Messages = () => {
     const [selectedMessage, setSelectedMessage] = useState(null); // Stores convo uid
 
     const [showCompose, setShowCompose] = useState(false);
-    const [composeInput, setComposeInput] = useState('');
+    // const [composeInput, setComposeInput] = useState('');
     const [composeContacts, setComposeContacts] = useState(null);
 
     const getUserFromConvo = (conversation) => {
@@ -41,7 +41,8 @@ const Messages = () => {
             console.log('already in convo');
         } else {
             // Add user to messages list
-            conversationTemp = { timestamp: { seconds: Date.now() / 1000 }, user };
+            const id = pairUID(currentUser.uid, user.uid);
+            conversationTemp = { timestamp: { seconds: Date.now() / 1000 }, user1: user, id };
             messagesListTemp.push(conversationTemp);
             setMessagesList(messagesListTemp);
         }
