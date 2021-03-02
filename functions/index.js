@@ -48,12 +48,12 @@ exports.deleteUser = functions.auth.user().onDelete((user) => {
 //     // duplicated post to all of followers feed
 // });
 
+// Cloud function which fans out posts to followers feed when post is created or changed
 exports.createPostFeeds = functions.firestore
     .document('users/{userID}/posts/{postID}')
     .onWrite(async (change, context) => {
         // Get the new post object and set the postID
         const newPost = change.after.data();
-        newPost.postID = context.params.postID;
 
         // Parameters
         const { userID, postID } = context.params;
@@ -64,10 +64,17 @@ exports.createPostFeeds = functions.firestore
         let operationCounter = 0;
         let batchIndex = 0;
 
+        // Adding additional data to new posts
+        if (!change.before.exists) {
+            newPost.hasLiked = false;
+        }
+        console.log(`new post being fanned out: ${postID}`);
+
         // Get all the users followers
         const followerRefs = await db.collection(`users/${userID}/followers`).get();
 
         followerRefs.docs.forEach((doc) => {
+            console.log(`Adding to user feed: ${doc.id}`);
             const followerID = doc.id;
             const followerFeedRef = db.doc(`users/${followerID}/feed/${postID}`);
 
@@ -95,7 +102,65 @@ exports.createPostFeeds = functions.firestore
             return db.doc(`users/${userID}/feed/${postID}`).delete();
         }
         // Set post in users own feed
-        return db.doc(`users/${userID}/feed/${postID}`).set({ newPost });
+        return db.doc(`users/${userID}/feed/${postID}`).set(newPost);
+    });
+
+// When following/unfollowing a user add/remove their posts to/from your feed
+exports.followUserFeed = functions.firestore
+    .document('users/{userID}/following/{followingID}')
+    .onWrite(async (change, context) => {
+        // Parameters
+        const { userID, followingID } = context.params;
+
+        // Create batch array to bypass 500 batch write limit
+        const batchArray = [];
+        batchArray.push(db.batch());
+        let operationCounter = 0;
+        let batchIndex = 0;
+
+        // Check if following or unfollowing
+        if (!change.after.exists && change.before.exists) {
+            // UNFOLLOWING
+            const feedCollectionRef = db.collection(`users/${userID}/feed`);
+            const followingPosts = await feedCollectionRef.where('user.uid', '==', followingID).get();
+
+            // Delete all posts from feed
+            followingPosts.forEach((doc) => {
+                batchArray[batchIndex].delete(doc.ref);
+
+                // Split write batches if over 500
+                operationCounter += 1;
+                if (operationCounter === 499) {
+                    batchArray.push(db.batch());
+                    batchIndex += 1;
+                    operationCounter = 0;
+                }
+            });
+            // Execute batch delete
+            batchArray.forEach((batch) => batch.commit());
+        } else {
+            // FOLLOWING
+            // Get all following users posts
+            const followingPostsRef = await db.collection(`users/${followingID}/posts`).get();
+
+            // Add all of following users post to own users feed
+            followingPostsRef.forEach((doc) => {
+                const postID = doc.id;
+                const usersFeedRef = db.doc(`users/${userID}/feed/${postID}`);
+
+                batchArray[batchIndex].set(usersFeedRef, doc.data());
+
+                // Split write batches if over 500
+                operationCounter += 1;
+                if (operationCounter === 499) {
+                    batchArray.push(db.batch());
+                    batchIndex += 1;
+                    operationCounter = 0;
+                }
+            });
+            // Execute batch write
+            batchArray.forEach((batch) => batch.commit());
+        }
     });
 
 // Could be a bottleneck when there are a lot of likes
