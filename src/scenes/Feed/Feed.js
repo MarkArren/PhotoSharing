@@ -29,13 +29,10 @@ function Feed() {
                     setFeed(data);
                     console.log(data);
                 });
-
             return unsubscribe;
         }
         const unsubscribe = firestore
-            .collection('users')
-            .doc(currentUser.uid)
-            .collection('feed')
+            .collectionGroup('posts')
             .orderBy('timestamp', 'desc')
             .get()
             .then((querySnapshot) => {
@@ -48,16 +45,14 @@ function Feed() {
                 console.log(data);
             });
         return unsubscribe;
-    }, [setFeed]);
-
-    // console.log(feed);
+    }, [feedType]);
 
     return (
         <div>
             <Navbar />
             <div className='feed-selector'>
-                <div>Following</div>
-                <div>For You</div>
+                <div onClick={() => setFeedType(0)} onKeyPress={() => setFeedType(0)} role='button' tabIndex='0'>Following</div>
+                <div onClick={() => setFeedType(1)} onKeyPress={() => setFeedType(1)} role='button' tabIndex='0'>For You</div>
             </div>
             <div className='feed'>
                 <div className='feed-posts'>
