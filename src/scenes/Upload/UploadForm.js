@@ -16,82 +16,45 @@ const UploadForm = () => {
         } else if (!image) {
             return;
         }
-        console.log(currentUser);
 
         const filename = `users/${currentUser.uid}/${uuidv4()}`;
         const uploadTask = storage.ref(filename).put(image);
 
+        // Function which is run when upload task is complete
+        const complete = async () => {
+            // Get url of image
+            const url = await storage.ref(filename).getDownloadURL();
+
+            // Upload post to DB
+            firestore
+                .collection('users')
+                .doc(currentUser.uid)
+                .collection('posts')
+                .add({
+                    url,
+                    caption,
+                    timestamp: new Date(),
+                    // Extra info for feed
+                    user: {
+                        username: currentUserInfo.username,
+                        name: currentUserInfo.name,
+                        uid: currentUser.uid,
+                        profile_pic: currentUserInfo?.profile_pic,
+                    },
+                    commentCount: 0,
+                    likeCount: 0,
+                    topComments: [],
+                });
+        };
+
+        // Set callbacks for uploading task
         uploadTask.on(
             'state_changed',
             (snapshot) => {
                 setProgress(Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100));
             },
-            (error) => {
-                console.log(error);
-            },
-            () => {
-                storage
-                    .ref(filename)
-                    .getDownloadURL()
-                    .then((url) => {
-                        console.log(url);
-                        // Creates post with url
-                        firestore
-                            .collection('users')
-                            .doc(currentUser.uid)
-                            .collection('posts')
-                            .add({
-                                url,
-                                caption,
-                                timestamp: new Date(),
-                            })
-                            .then((doc) => {
-                                console.log('sucessfully written to user posts');
-
-                                // TODO Client side fan out of data to all users feed
-                                const { id } = doc;
-                                console.log(doc);
-                                // Get all users
-                                firestore
-                                    .collection('users')
-                                    .get()
-                                    .then((users) => {
-                                        if (!users.empty) {
-                                            // Loop through all users
-                                            users.forEach((userDoc) => {
-                                                const user = userDoc.data();
-                                                console.log(user);
-                                                console.log(userDoc);
-
-                                                // Add post to each users feed collection
-                                                firestore
-                                                    .collection('users')
-                                                    .doc(userDoc.id)
-                                                    .collection('feed')
-                                                    .doc(id)
-                                                    .set({
-                                                        caption,
-                                                        post: doc,
-                                                        url,
-                                                        user: {
-                                                            username: currentUserInfo.username,
-                                                            name: currentUserInfo.name,
-                                                            uid: currentUser.uid,
-                                                            // eslint-disable-next-line max-len
-                                                            profile_pic: currentUserInfo.profile_pic,
-                                                        },
-                                                        commentCount: 0,
-                                                        likeCount: 0,
-                                                        hasLiked: false,
-                                                        topComments: [],
-                                                        timestamp: new Date(),
-                                                    });
-                                            });
-                                        }
-                                    });
-                            });
-                    });
-            },
+            (error) => { console.log(error); },
+            () => complete(),
         );
 
         e.preventDefault();
