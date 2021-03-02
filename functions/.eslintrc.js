@@ -7,8 +7,11 @@ module.exports = {
     extends: [
         'eslint:recommended',
         'google',
+        'airbnb',
     ],
     rules: {
-        indent: ['error', 4, {SwitchCase: 1}],
+        indent: ['error', 4, { SwitchCase: 1 }],
+        'no-console': 'off',
+        'no-unused-vars': 'off',
     },
 };
