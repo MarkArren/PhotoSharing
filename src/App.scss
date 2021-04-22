@@ -58,12 +58,37 @@ a {
     color: $textColour;
 }
 
-// .posts-container {
-//     float: left;
-//     margin-left: 40px;
-// }
+[type="file"] {
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute !important;
+    white-space: nowrap;
+    width: 1px;
+}
+  
+[type="text"] {
+    background-color: $backgroundColour;
+    width: 100%;
+    box-sizing: border-box;
+    padding: .5rem .5rem;
 
-// .stories-container {
-//     float: right;
-//     margin-right: 40px;
-// }
+    border: $borderColour 1px solid ;
+    border-radius: .25rem;
+    color: $textColour;
+    &:focus{
+        outline: none;
+    }
+}
+
+button {
+    width: 100%;
+    padding: 0.5rem 0;
+
+    background-color: $submitColour;
+    border: none;
+    border-radius: .25rem;
+    color: $textColour;
+}
