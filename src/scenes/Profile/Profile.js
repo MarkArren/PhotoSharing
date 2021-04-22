@@ -10,6 +10,7 @@ import { useAuth } from '../../context/AuthConext';
 import Stories from '../Feed/components/Stories';
 import Post from '../../components/Post';
 import { firestore } from '../../services/firebase';
+import { followUser } from '../../FirebaseHelper';
 
 function Profile(props) {
     const { currentUser, currentUserInfo } = useAuth();
@@ -20,62 +21,25 @@ function Profile(props) {
     const [userExists, setUserExists] = useState(true);
     const [doesFollow, setDoesFollow] = useState(false);
 
-    async function followUser() {
+    async function handleFollow() {
         if (!currentUser || !user) {
             return;
         }
 
-        const followersRef = firestore.collection('users')
-            .doc(user?.uid)
-            .collection('followers')
-            .doc(currentUser?.uid);
-        const followingRef = firestore.collection('users')
-            .doc(currentUser?.uid)
-            .collection('following')
-            .doc(user?.uid);
+        const result = await followUser(currentUser, currentUserInfo, user, doesFollow);
 
-        // Transaction to unfollow/ follow user
-        try {
-            await firestore.runTransaction(async (t) => {
-                const docFollowers = await t.get(followersRef);
-
-                if (docFollowers.exists) {
-                    // Delete follow from target users profile
-                    t.delete(followersRef);
-                    // Delete following from current users profile
-                    t.delete(followingRef);
-                    const tempUser = user;
-                    tempUser.followers -= 1;
-                    setUser({ ...tempUser });
-                    setDoesFollow(false);
-                } else {
-                    // Add follow to target users profile
-                    t.set(followersRef, {
-                        user: {
-                            username: currentUserInfo.username,
-                            name: currentUserInfo.name,
-                            uid: currentUser.uid,
-                        },
-                        timestamp: new Date(),
-                    });
-                    // Add following to current users profile
-                    t.set(followingRef, {
-                        user: {
-                            username: user.username,
-                            name: user.name,
-                            uid: user.uid,
-                        },
-                        timestamp: new Date(),
-                    });
-                    const tempUser = user;
-                    tempUser.followers += 1;
-                    setUser({ ...tempUser });
-                    setDoesFollow(true);
-                }
-            });
-            console.log('Follow/ Unfollow successful!');
-        } catch (e) {
-            console.log('Follow/ Unfollow failure:', e);
+        if (result === 1) {
+            // User now following
+            const tempUser = user;
+            tempUser.followers += 1;
+            setUser({ ...tempUser });
+            setDoesFollow(true);
+        } else if (result === 2) {
+            // User now unfollowing
+            const tempUser = user;
+            tempUser.followers -= 1;
+            setUser({ ...tempUser });
+            setDoesFollow(false);
         }
     }
 
@@ -174,7 +138,7 @@ function Profile(props) {
                                 </div>
                             ) : (
                                 <div className='profile-interaction'>
-                                    <button type='button' onClick={followUser}>
+                                    <button type='button' onClick={handleFollow}>
                                         {doesFollow ? 'Following' : 'Follow'}
                                     </button>
                                     <button type='button' onClick={messageUser}>Message</button>
@@ -234,29 +198,20 @@ function Profile(props) {
                                 </div>
                             </div>
                         ))}
-                            <div className='gallery-item'>
-                                <img src='https://via.placeholder.com/293x293' alt='placeholder' />
-                                <div className='gallery-item-info'>
-                                    <span>
-                                        <VscHeart className='icon' />
-                                        0
-                                    </span>
-                                    <span>
-                                        <BsChat className='icon' />
-                                        0
-                                    </span>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     {currentPost && showPost ? (
                         <div
                             className='current-post'
-                            onClick={() => {
-                                setShowPost(false);
+                            onClick={(e) => {
+                                if (e.target.className === 'current-post') {
+                                    setShowPost(false);
+                                }
                             }}
-                            onKeyPress={() => {
-                                setShowPost(false);
+                            onKeyPress={(e) => {
+                                if (e.target.className === 'current-post') {
+                                    setShowPost(false);
+                                }
                             }}
                             tabIndex='0'
                             role='button'

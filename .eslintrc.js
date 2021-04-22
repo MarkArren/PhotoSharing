@@ -20,6 +20,12 @@ module.exports = {
         'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
         'jsx-quotes': [2, 'prefer-single'],
 
+        'jsx-a11y/label-has-associated-control': ['error', {
+            required: {
+                some: ['nesting', 'id'],
+            },
+        }],
+
         // Development
         'no-console': 'off',
         'no-unused-vars': 'off',

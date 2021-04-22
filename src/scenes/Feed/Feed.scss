@@ -15,6 +15,10 @@
         padding-right: 50px;
         margin-right: 50px;
     }
+
+    .active{
+        font-weight: 700;
+    }
 }
 
 .post-container{
@@ -36,6 +40,10 @@
 }
 
 @media (max-width: 56rem) {
+    .feed-selector {
+        padding: 0.5rem 1rem;
+        justify-content: center;
+    }
     .feed{
         flex-direction: column-reverse;
     }
@@ -48,6 +56,9 @@
 }
 
 @media (max-width: 25rem) {
+    .feed-selector {
+        padding: 0.1rem 1rem;
+    }
     .post{
         border: none;
     }

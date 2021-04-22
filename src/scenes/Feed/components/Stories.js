@@ -4,7 +4,6 @@ import React from 'react';
 function Stories() {
     return (
         <div className='stories-container'>
-            <h1>Username Featured Stories</h1>
             <div className='stories'>
                 <div className='story-preview'>
                     <img src='http://via.placeholder.com/168x280' alt='profile-pic' />

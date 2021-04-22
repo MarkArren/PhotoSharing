@@ -14,8 +14,8 @@ function MessagePreview({ conversation }) {
         } else {
             setContact(conversation.user1);
         }
-        console.log(conversation);
-        console.log(conversation?.user1 === currentUser?.uid);
+        // console.log(conversation);
+        // console.log(conversation?.user1 === currentUser?.uid);
     }, [conversation, currentUser]);
 
     return (

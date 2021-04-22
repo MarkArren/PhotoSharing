@@ -51,8 +51,8 @@ function Feed() {
         <div>
             <Navbar />
             <div className='feed-selector'>
-                <div onClick={() => setFeedType(0)} onKeyPress={() => setFeedType(0)} role='button' tabIndex='0'>Following</div>
-                <div onClick={() => setFeedType(1)} onKeyPress={() => setFeedType(1)} role='button' tabIndex='0'>For You</div>
+                <div className={feedType === 0 ? 'active' : null} onClick={() => setFeedType(0)} onKeyPress={() => setFeedType(0)} role='button' tabIndex='0'>Following</div>
+                <div className={feedType === 0 ? null : 'active'} onClick={() => setFeedType(1)} onKeyPress={() => setFeedType(1)} role='button' tabIndex='0'>For You</div>
             </div>
             <div className='feed'>
                 <div className='feed-posts'>

@@ -2,11 +2,12 @@
 import React, { useEffect, useState } from 'react';
 import './Chat.scss';
 import { AiOutlineSend } from 'react-icons/ai';
+import { VscChevronLeft } from 'react-icons/vsc';
 import { firestore } from '../../../services/firebase';
 import { pairUID } from '../../../Helper';
 import { useAuth } from '../../../context/AuthConext';
 
-function Chat({ contact }) {
+function Chat({ contact, inMessage, setInMessage }) {
     const { currentUser, currentUserInfo } = useAuth();
     const [messageInput, setMessageInput] = useState('');
 
@@ -22,7 +23,7 @@ function Chat({ contact }) {
                 return message;
             });
             setMessages(data);
-            console.log(data);
+            // console.log(data);
         });
     };
 
@@ -82,8 +83,12 @@ function Chat({ contact }) {
 
     if (contact) {
         return (
-            <div className='chat-wrapper'>
+            <div className={inMessage ? 'chat-wrapper ' : 'chat-wrapper hide'}>
                 <div className='chat-top'>
+                    <button type='button' className={inMessage ? 'chat-top-back ' : 'chat-top-back hide'} onClick={(e) => setInMessage(false)}>
+                        <VscChevronLeft size='30px' />
+                    </button>
+
                     <div>
                         <img src={contact?.profile_pic ? contact?.profile_pic : 'https://via.placeholder.com/150'} alt='Avatar' />
                     </div>
@@ -106,7 +111,7 @@ function Chat({ contact }) {
         );
     }
     return (
-        <div>
+        <div className='chat-empty'>
             <h3>Compose new message</h3>
             <h3>Or select conversation</h3>
         </div>

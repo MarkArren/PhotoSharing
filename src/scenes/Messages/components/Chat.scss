@@ -2,6 +2,10 @@
 
 $bubble-colour: hsl(0, 0%, 15%);
 
+.chat-empty{
+    padding: 1rem;
+}
+
 .chat-wrapper{
     height: 100%;
     display: flex;
@@ -21,6 +25,13 @@ $bubble-colour: hsl(0, 0%, 15%);
             border-radius: 50%;
             width: 30px;
             float: left;
+        }
+
+        &-back{
+            width: min-content;
+            background-color: transparent;
+            margin-right: .25rem;
+            display: none;
         }
     }
 
@@ -71,3 +82,17 @@ $bubble-colour: hsl(0, 0%, 15%);
         align-self: flex-end;
     }
 }
+
+@media (max-width: 25rem) {
+    .chat-wrapper{
+        .chat-top{
+            &-back{
+                display: flex;
+                width: min-content;
+                background-color: transparent;
+                margin-right: .25rem;
+            }
+        }
+    }
+}
+

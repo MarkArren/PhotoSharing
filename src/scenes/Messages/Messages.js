@@ -20,6 +20,8 @@ const Messages = () => {
     // const [composeInput, setComposeInput] = useState('');
     const [composeContacts, setComposeContacts] = useState(null);
 
+    const [inMessage, setInMessage] = useState(false);
+
     const getUserFromConvo = (conversation) => {
         if (conversation?.user1?.uid === currentUser?.uid) {
             return conversation?.user2;
@@ -38,7 +40,7 @@ const Messages = () => {
         if (indexOfMessage !== -1) {
             // TODO move conversation to top of array
             conversationTemp = messagesList[indexOfMessage];
-            console.log('already in convo');
+            // console.log('already in convo');
         } else {
             // Add user to messages list
             const id = pairUID(currentUser.uid, user.uid);
@@ -48,12 +50,14 @@ const Messages = () => {
         }
 
         setSelectedMessage(user);
+        setInMessage(true);
     };
 
     // Change the selected message
     const changeSelectedMessage = (conversation) => {
         const contact = getUserFromConvo(conversation);
         setSelectedMessage(contact);
+        setInMessage(true);
     };
 
     // Fetch user conversations
@@ -70,7 +74,7 @@ const Messages = () => {
                     return conversation;
                 });
                 setMessagesList(data);
-                console.log(data);
+                // console.log(data);
             });
         return unsubscribe;
     }, [setMessagesList]);
@@ -78,7 +82,7 @@ const Messages = () => {
     // Fetch all users on app
     useEffect(() => {
         if (showCompose) {
-            console.log('show compose true');
+            // console.log('show compose true');
             firestore.collection('users').where('__name__', '!=', currentUser.uid).get().then((querySnapshot) => {
                 const data = querySnapshot.docs.map((doc) => {
                     const contact = doc.data();
@@ -86,7 +90,7 @@ const Messages = () => {
                     return contact;
                 });
                 setComposeContacts(data);
-                console.log(data);
+                // console.log(data);
             });
         }
     }, [showCompose]);
@@ -95,17 +99,11 @@ const Messages = () => {
         <div>
             <Navbar />
             <div className='messages-wrapper'>
-                <div className='messages'>
-                    <h3>Messages</h3>
-                    <span
-                        role='button'
-                        className='messages-compose'
-                        onClick={() => setShowCompose(true)}
-                        onKeyDown={() => setShowCompose(true)}
-                        tabIndex='0'
-                    >
+                <div className={inMessage ? 'messages hide' : 'messages'}>
+                    <h3 className='messages-title'>Messages</h3>
+                    <button type='button' className='messages-compose' onClick={() => setShowCompose(true)}>
                         <BiMessageAdd size='27px' type='submit' className='messages-compose-icon' />
-                    </span>
+                    </button>
                     {messagesList
                         ? messagesList?.map((conversation, index) => (
                             <div key={conversation.id} role='button' onClick={(e) => changeSelectedMessage(conversation)} onKeyDown={(e) => changeSelectedMessage(conversation)} tabIndex='0'>
@@ -114,7 +112,7 @@ const Messages = () => {
                         ))
                         : null}
                 </div>
-                <Chat contact={selectedMessage} />
+                <Chat contact={selectedMessage} inMessage={inMessage} setInMessage={setInMessage} />
             </div>
             {composeContacts && showCompose ? (
                 <div
