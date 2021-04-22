@@ -1,0 +1,54 @@
+@import 'src/App.scss';
+
+.edit{
+    display: grid;
+    padding: 1rem;
+    grid-template-columns: 30% 70%;
+    grid-gap: 1rem;
+    margin: 1rem auto 0 auto;
+    max-width: 600px;
+
+    img{
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        max-width: 80px;
+        margin-left: auto;
+        border-radius: 50%;
+    }
+
+    label{
+        grid-column: 1;
+        text-align: right;
+        vertical-align: bottom;
+        padding: .5rem;
+    }
+
+    &-pic-label{
+        grid-column: 2 !important;
+        text-align: left !important;
+        cursor: pointer;
+        color: lightblue;
+        padding: 0 !important;
+    }
+}
+
+.edit-submit{
+    grid-column: 1/3;
+}
+
+.errors{
+    grid-column: 1/3;
+    border: $borderColour 1px solid;
+    border-radius: .25rem;
+    padding: .5rem;
+
+    text-align: center;
+    font-size: .8rem;
+    margin-bottom: 1rem;
+}
+
+
+// [type='text']{
+//     back
+// }

@@ -2,6 +2,8 @@
 /* eslint-disable no-return-assign */
 import React, { useRef, useState } from 'react';
 import { useAuth } from '../../../context/AuthConext';
+import Navbar from '../../../components/Navbar';
+import './EditProfile.scss';
 
 const EditProfile = () => {
     const { currentUser } = useAuth();
@@ -14,7 +16,8 @@ const EditProfile = () => {
     const usernameRef = useRef();
     const nameRef = useRef();
     const bioRef = useRef();
-    const imageRef = useRef();
+    const imageRef = useRef(currentUserInfo?.profile_pic);
+    const [image, setImage] = useState(currentUserInfo?.profile_pic);
     const [error, setError] = useState('');
 
     async function handleSubmit(e) {
@@ -37,6 +40,7 @@ const EditProfile = () => {
                 await changeEmail(emailRef.current.value);
             } catch (exception) {
                 setError(exception.message);
+                return;
             }
         }
 
@@ -46,6 +50,7 @@ const EditProfile = () => {
                 await changeProfilePic(imageRef.current.files[0]);
             } catch (exception) {
                 setError(exception.message);
+                return;
             }
         }
 
@@ -59,41 +64,61 @@ const EditProfile = () => {
             console.log('bio changed');
             changeBio(bioRef.current.value);
         }
+
+        setError('Profile Updated');
     }
 
     // console.log(currentUser);
     return (
         <div>
-            <form onSubmit={handleSubmit}>
-                {error}
+            <Navbar />
+
+            <form onSubmit={handleSubmit} className='edit'>
+                {error ? (
+                    <div className='errors'>
+                        {error}
+                    </div>
+                ) : null}
                 <img
-                    src={
-                        currentUserInfo?.profile_pic
-                            ? currentUserInfo?.profile_pic
-                            : 'http://via.placeholder.com/200x200'
-                    }
+                    src={image || currentUserInfo?.profile_pic}
                     alt='profile-pic'
                 />
-                <input
-                    type='file'
-                    ref={imageRef}
-                    accept='image/png, image/jpeg'
-                    // onChange={(e) => setSelectedFile(e.target.files[0])}
-                />
-                Name
-                <input type='text' ref={nameRef} defaultValue={currentUserInfo?.name} />
-                Username
+                <span>
+                    {currentUserInfo?.username}
+                    <br />
+                    <input
+                        type='file'
+                        id='file'
+                        ref={imageRef}
+                        accept='image/png, image/jpeg'
+                        onChange={(e) => {
+                            if (e.target.files[0]) setImage(URL.createObjectURL(e.target.files[0]));
+                        }}
+                    />
+                    <label htmlFor='file' className='edit-pic-label'>
+                        Change Profile Picture
+                    </label>
+                </span>
+
+                <label htmlFor='name'>Name</label>
+                <input type='text' id='name' ref={nameRef} defaultValue={currentUserInfo?.name} />
+
+                <label htmlFor='username'>Username</label>
                 <input
                     type='text'
+                    id='username'
                     ref={usernameRef}
                     defaultValue={currentUserInfo?.username}
                     // required
                 />
-                Bio
-                <input type='text' ref={bioRef} defaultValue={currentUserInfo?.bio} />
-                Email
-                <input type='text' ref={emailRef} defaultValue={currentUser?.email} required />
-                <button type='submit'>Save</button>
+
+                <label htmlFor='bio'>Bio</label>
+                <input type='text' id='bio' ref={bioRef} defaultValue={currentUserInfo?.bio} />
+
+                <label htmlFor='email'>Email</label>
+                <input type='text' id='bio' ref={emailRef} defaultValue={currentUser?.email} required />
+
+                <button className='edit-submit' type='submit'>Save</button>
             </form>
         </div>
     );
