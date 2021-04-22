@@ -4,8 +4,11 @@ const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
 const db = admin.firestore();
+const bucket = admin.storage().bucket();
 
-// Create user account in db on acc creation
+/**
+ * Creates user account with default stats
+ */
 exports.createUser = functions.auth.user().onCreate((event) => {
     const user = event.data;
 
@@ -22,6 +25,9 @@ exports.createUser = functions.auth.user().onCreate((event) => {
     }, { merge: true });
 });
 
+/**
+ * Updates user profile
+ */
 exports.updateProfile = functions.https.onRequest((request, response) => {
     db.collection('users').doc(request.user.uid).set({
         bio: '',
@@ -33,22 +39,170 @@ exports.updateProfile = functions.https.onRequest((request, response) => {
     });
 });
 
-// Remove user from database when account is deleted
+/**
+ * Remove user from database when account is deleted
+ */
 exports.deleteUser = functions.auth.user().onDelete((user) => {
     db.doc(`users/${user.uid}`).delete().then(() => {
         console.log(`Deleted user ${user.uid} from db`);
     });
 });
 
-// exports.uploadPost = functions.https.onRequest((request, response) => {
-//     functions.logger.info("Hello logs!", {structuredData: true});
-//     response.send("Hello from Firebase!");
-//     // Get all users followers
+/**
+ * @param {number} type 0=following, 1=like, 2=Comment
+ * @param {string} toUID UID of user recieving notification
+ * @param {string} idToken ID token of logged in user
+ * @param {post} post (If type>0) post regarding notification
+ * @param {boolean} remove Sets if removing notification
+ *
+ */
+exports.sendNotification = functions.https.onRequest(async (req, res) => {
+    // Set CORS headers for preflight requests
+    // Allows GETs from any origin with the Content-Type header
+    // and caches preflight response for 3600s
+    res.set('Access-Control-Allow-Origin', '*');
+    if (req.method === 'OPTIONS') {
+    // Send response to OPTIONS requests
+        res.set('Access-Control-Allow-Methods', 'GET');
+        res.set('Access-Control-Allow-Methods', 'POST');
+        res.set('Access-Control-Allow-Headers', 'Content-Type');
+        res.set('Access-Control-Max-Age', '3600');
+        res.status(204).send('');
+    }
 
-//     // duplicated post to all of followers feed
-// });
+    let type;
+    let idToken;
+    let toUID;
+    let post;
+    let remove;
 
-// Cloud function which fans out posts to followers feed when post is created or changed
+    ({
+        // eslint-disable-next-line prefer-const
+        type, toUID, idToken, post, remove = false,
+    } = req.body);
+
+    // functions.logger.info('Hello logs!', { structuredData: true });
+    // const {
+    //     type, toUID, idToken, post, remove = false,
+    // } = req.body;
+
+    console.log('Parsed variables:');
+    console.log(type, toUID, idToken, post, remove);
+
+    // Check if required varaibles are satisfied
+    if (type == null || toUID == null || idToken == null) {
+        // console.log('test', type, toUID, idToken, post, remove);
+        console.log('error not all variables');
+        res.status(422).send('ERROR: Not all varaibles are satisifed');
+        return;
+    }
+
+    if (type === 1 && (post.id == null)) {
+        console.log('error not all variables for specific type');
+        res.status(422).send('ERROR: Not all varaibles are satisifed for post.id');
+    }
+
+    const notifCollection = db.collection(`users/${toUID}/notifications`);
+
+    // Gets user from their user token
+    const fromUID = await admin.auth().verifyIdToken(idToken);
+    const userDoc = await db.doc(`users/${fromUID.uid}`).get();
+    if (!userDoc.exists) {
+        console.error(`ERROR: User doc does not exists - ${fromUID.uid}`);
+        res.status(400).send('ERROR: User doc does not exists');
+        return;
+    }
+
+    // Extract only required information from user
+    const user = (({
+        // eslint-disable-next-line camelcase
+        name, username, profile_pic,
+    }) => ({
+        name, username, profile_pic,
+    }))(userDoc.data());
+
+    // Set user uid and check undfefined profile pic
+    user.uid = fromUID.uid;
+    if (user.profile_pic == null) user.profile_pic = '';
+
+    console.log('Got user info:');
+    console.log(fromUID.uid, user.name, user.username, user.profile_pic);
+
+    if (type === 0) {
+        if (remove) {
+            // Remove notification
+            await notifCollection.where('user.uid', '==', user.uid).where('type', '==', type).get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        console.log(doc.id, ' => ', doc.data());
+                        doc.ref.delete().then(() => {
+                            console.log('Notifiction successfully deleted!');
+                        })
+                            .catch((error) => {
+                                console.error('Error removing notification: ', error);
+                            });
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error getting notifications: ', error);
+                });
+        } else {
+            // Add notification
+            await notifCollection.add({
+                type,
+                user,
+                timestamp: admin.firestore.FieldValue.serverTimestamp(),
+            })
+                .then((docRef) => {
+                    console.log('Notification written with ID: ', docRef.id);
+                })
+                .catch((error) => {
+                    console.error('Error adding notification: ', error);
+                });
+            console.log('sent notification for follow');
+        }
+    } else if (remove) {
+        // Remove nofication
+        await notifCollection.where('user.uid', '==', user.uid).where('type', '==', type).where('post.id', '==', post.id).get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    console.log(doc.id, ' => ', doc.data());
+                    doc.ref.delete().then(() => {
+                        console.log('Notifiction successfully deleted!');
+                    })
+                        .catch((error) => {
+                            console.error('Error removing notification: ', error);
+                        });
+                });
+            })
+            .catch((error) => {
+                console.error('Error getting notifications: ', error);
+            });
+    } else {
+        console.log('sending notification');
+        // Add notification
+        await notifCollection.add({
+            type,
+            user,
+            post,
+            timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        })
+            .then((docRef) => {
+                console.log('Notification written with ID: ', docRef.id);
+            })
+            .catch((error) => {
+                console.error('Error adding notification: ', error);
+            });
+        console.log('sent notification for others');
+    }
+
+    console.log('done');
+    res.send('Success');
+});
+
+/**
+ * Cloud function which fans out posts to followers feed when post is created or changed
+ */
 exports.createPostFeeds = functions.firestore
     .document('users/{userID}/posts/{postID}')
     .onWrite(async (change, context) => {
@@ -99,13 +253,24 @@ exports.createPostFeeds = functions.firestore
 
         if (!change.after.exists && change.before.exists) {
             // Delete post from users own feed
-            return db.doc(`users/${userID}/feed/${postID}`).delete();
+            db.doc(`users/${userID}/feed/${postID}`).delete();
+
+            // Get refence of image from URL
+            const splitURL = change.before.data().url.split('/');
+            let ref = unescape(splitURL[splitURL.length - 1]);
+            // eslint-disable-next-line prefer-destructuring
+            ref = ref.split('?')[0];
+
+            // Delete image from storage bucket
+            return bucket.file(ref).delete();
         }
         // Set post in users own feed
         return db.doc(`users/${userID}/feed/${postID}`).set(newPost);
     });
 
-// When following/unfollowing a user add/remove their posts to/from your feed
+/**
+ * When following/unfollowing a user add/remove their posts to/from your feed
+ */
 exports.followUserFeed = functions.firestore
     .document('users/{userID}/following/{followingID}')
     .onWrite(async (change, context) => {

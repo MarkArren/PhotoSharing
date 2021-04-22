@@ -1,6 +1,8 @@
 @import '../App.scss';
 
-.navbar {
+
+
+.nav {
     padding: 0.6rem 3.12rem;
     height: 3.12rem;
     background-color: $navbarColour;
@@ -8,14 +10,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    overflow: hidden;
+    // overflow: hidden;
 
-    .nav-right {
+    &-right {
         display: flex;
         align-items: center;
         justify-content: right;
 
-        .nav-search {
+        &-search {
             padding: 0.625rem 1.25rem;
             border: none;
             border-radius: 0.3rem;
@@ -30,12 +32,11 @@
         }
     }
 
-    .nav-right-mobile,
-    .hide {
+    &-right-mobile{
         display: none;
     }
 
-    .nav-icon {
+    &-icon {
         padding-left: 0.625rem;
 
         vertical-align: middle;
@@ -43,23 +44,112 @@
         color: hsl(0, 0%, 25%);
         display: flex;
         align-items: center;
+        position: relative;
+    }
+
+    &-notifications{
+        position: absolute;
+        top: 3rem;
+        right: -20px;
+        // left: 50%;
+
+
+        width: 350px;
+        height: 700px;
+
+        padding: 1rem;
+        padding-top: 0;
+        border-radius: 10px;
+        background-color: $backgroundColour2;
+        box-shadow: 0 0 5px 1px $backgroundColour;
+        z-index: 998;
+
+        &-title{
+            font-size: 1.5rem;
+            color: $textColour;
+        }
+        
+
+
+        &-pointer,
+        &:before {
+            background-color: $backgroundColour2;
+            position: absolute;
+            top: -7px;
+            right: 28.5px;
+            // left: 50%;
+            display: block;
+            width: 15px;
+            height: 15px;
+            content: '\00a0';
+            transform: rotate(45deg);
+        }
+
+
     }
 }
 
+.notification {
+    display: grid;
+    grid-template-columns: 15% auto 20%;
+    grid-gap: .5rem;
+    border-bottom: $borderColour 1px solid;
+    padding: 1rem 0.25rem;
+    font-size: 1rem;
+    color: $textColour;
+
+    img{
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        border-radius: .25rem;
+    }
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &-profilepic img {
+        border-radius: 50%;
+    }
+
+    &-username {
+        font-weight: 500;
+        margin-right: .25rem;
+    }
+
+    &-text {
+        margin-right: .25rem;
+    }
+
+    &-timestamp {
+        color: $textColour2;
+    }
+
+    &-follow{
+        // padding: .5rem;
+        height: min-content;
+    }
+}
+
+.hide {
+    display: none;
+}
+
 @media (max-width: 50rem) {
-    .navbar {
+    .nav {
         padding: 0.5rem 1rem;
-        .nav-right {
+        &-right {
             display: none;
         }
-        .nav-mobile-toggle {
+        &-mobile-toggle {
             display: auto;
         }
-        .nav-right-mobile {
+        &-right-mobile {
             display: flex;
         }
 
-        .nav-mobile {
+        &-mobile {
             top: 3.12rem;
             right: 0;
             width: 80%;
@@ -71,6 +161,7 @@
             display: flex;
             flex-direction: column;
             font-size: 1.5rem;
+            z-index: 999;
 
             a {
                 padding-bottom: 1.5rem;
@@ -80,13 +171,13 @@
 }
 
 @media (max-width: 25rem) {
-    .navbar {
+    .nav {
         justify-content: flex-end;
         overflow: hidden;
-        .nav-left {
+        &-left {
             display: none;
         }
-        .nav-mobile {
+        &-mobile {
             width: 95%;
             padding: 1rem;
             font-size: 1rem;

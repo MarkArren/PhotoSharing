@@ -1,5 +1,5 @@
 import './Navbar.scss';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FiMessageCircle } from 'react-icons/fi';
 import { MdNotifications } from 'react-icons/md';
@@ -8,12 +8,17 @@ import { IoAddCircleOutline } from 'react-icons/io5';
 import { IconContext } from 'react-icons';
 import PropTypes from 'prop-types';
 import { useAuth } from '../context/AuthConext';
+import Notification from './Notification';
+import { firestore } from '../services/firebase';
 
 function Navbar(props) {
-    const { currentUserInfo } = useAuth();
+    const { currentUser, currentUserInfo } = useAuth();
     const { className } = props;
     const [navMobileOpen, setNavMobileOpen] = useState(false);
     const searchRef = useRef();
+
+    const [notificationsOpen, setNotificationsOpen] = useState(false);
+    const [notifications, setNotifications] = useState(null);
 
     function handleSearch(e) {
         e.preventDefault();
@@ -21,8 +26,45 @@ function Navbar(props) {
         return searchRef.current.value;
     }
 
+    function openNavBar() {
+
+    }
+
+    useEffect(() => {
+        if (notificationsOpen) {
+            const unsubscribe = firestore
+                .collection(`users/${currentUser.uid}/notifications`)
+                .orderBy('timestamp', 'desc')
+                .get()
+                .then((querySnapshot) => {
+                    const data = querySnapshot.docs.map((doc) => {
+                        const notification = doc.data();
+                        notification.id = doc.id;
+                        return notification;
+                    });
+                    setNotifications(data);
+                    console.log(data);
+                });
+            return unsubscribe;
+        }
+        return null;
+    }, [notificationsOpen]);
+
+    const notificationBox = (
+
+        <div className={notificationsOpen ? 'nav-notifications' : 'hide'}>
+
+            <span className='nav-notifications-title'>{notifications?.lenth < 1 ? 'Notifications' : 'No notifications'}</span>
+            {notifications
+            && notifications?.map((notification) => (
+                <Notification notification={notification} key={notification.id} />
+            ))}
+        </div>
+
+    );
+
     return (
-        <div className={`navbar ${className || ''}`}>
+        <div className={`nav ${className || ''}`}>
             <Link to='/' className='nav-left'>
                 <h3>ProjectName</h3>
             </Link>
@@ -32,7 +74,7 @@ function Navbar(props) {
                         type='text'
                         ref={searchRef}
                         placeholder='Search'
-                        className='nav-search'
+                        className='nav-right-search'
                     />
                 </form>
                 <Link to='/upload' className='nav-icon'>
@@ -42,7 +84,11 @@ function Navbar(props) {
                     <FiMessageCircle />
                 </Link>
                 <div className='nav-icon'>
-                    <MdNotifications />
+                    <MdNotifications onClick={() => {
+                        setNotificationsOpen(!notificationsOpen);
+                    }}
+                    />
+                    {notificationBox}
                 </div>
                 <Link to={`/${currentUserInfo?.username}`} className='nav-icon'>
                     <AiOutlineUser />
@@ -50,7 +96,11 @@ function Navbar(props) {
             </div>
             <div className='nav-right-mobile'>
                 <div className='nav-icon'>
-                    <MdNotifications />
+                    <MdNotifications onClick={() => {
+                        setNotificationsOpen(!notificationsOpen);
+                    }}
+                    />
+                    {notificationBox}
                 </div>
                 <div className='nav-mobile-toggle nav-icon'>
                     {navMobileOpen ? (
@@ -71,9 +121,10 @@ function Navbar(props) {
                     <Link to='/'>Home</Link>
                     <Link to='/upload'>Upload</Link>
                     <Link to='/messages'>Messages</Link>
-                    <Link to='/profile'>Profile</Link>
+                    <Link to={`/${currentUserInfo?.username}`}>Profile</Link>
                 </div>
             </div>
+
         </div>
     );
 }
