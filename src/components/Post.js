@@ -4,9 +4,10 @@ import React, { useState } from 'react';
 import { IconContext } from 'react-icons';
 import { VscHeart } from 'react-icons/vsc';
 import { BsChat } from 'react-icons/bs';
-import { AiOutlineSend } from 'react-icons/ai';
+import { AiOutlineSend, AiOutlineMore, AiOutlineEllipsis } from 'react-icons/ai';
 import { RiHeartFill } from 'react-icons/ri';
 import PropTypes, { object } from 'prop-types';
+import { sendNotification } from '../FirebaseHelper';
 import Comment from './Comment';
 import { firestore } from '../services/firebase';
 import { useAuth } from '../context/AuthConext';
@@ -21,6 +22,8 @@ function Post({ post }) {
     const [commentInput, setCommentInput] = useState('');
     const [hasLiked, setHasLiked] = useState(post.hasLiked);
     const [likeCount, setLikeCount] = useState(post.likeCount);
+
+    const [moreOpen, setMoreOpen] = useState(false);
 
     const viewComments = (refresh = false) => {
         if (!post?.user?.uid) {
@@ -53,7 +56,7 @@ function Post({ post }) {
         if (refresh) setShowComments(!showComments);
     };
 
-    const handleSubmitComment = (e) => {
+    const handleSubmitComment = async (e) => {
         if (!currentUser) {
             // window.location.reload();
             return;
@@ -78,7 +81,7 @@ function Post({ post }) {
                     username: currentUserInfo.username,
                     name: currentUserInfo.name,
                     uid: currentUser.uid,
-                    profile_pic: currentUserInfo.profile_pic,
+                    profile_pic: currentUserInfo.profile_pic ? currentUserInfo.profile_pic : '',
                 },
                 timestamp: new Date(),
             })
@@ -87,10 +90,12 @@ function Post({ post }) {
                 setCommentInput('');
             });
 
+        // Send comment notification
+        sendNotification(currentUser, 2, post?.user?.uid, post);
         e.preventDefault();
     };
 
-    const handleSubmitLike = (e) => {
+    const handleSubmitLike = async (e) => {
         if (!currentUser) {
             return;
         }
@@ -106,7 +111,7 @@ function Post({ post }) {
             .collection('likes')
             .doc(currentUser.uid)
             .get()
-            .then((doc) => {
+            .then(async (doc) => {
                 if (doc.exists) {
                     // Unlike post
                     doc.ref.delete();
@@ -119,6 +124,9 @@ function Post({ post }) {
                         .collection('feed')
                         .doc(post.id)
                         .set({ hasLiked: false }, { merge: true });
+
+                    // Remove like notification
+                    sendNotification(currentUser, 1, post?.user?.uid, post, true);
                 } else {
                     // Like post
                     firestore
@@ -146,10 +154,32 @@ function Post({ post }) {
                         .doc(post.id)
                         .set({ hasLiked: true }, { merge: true });
                     setLikeCount(likeCount + 1);
+
+                    console.log(currentUser);
+                    console.log(currentUser.getIdToken().then());
+
+                    // Send like notification
+                    sendNotification(currentUser, 1, post?.user?.uid, post);
                 }
             });
 
         e.preventDefault();
+    };
+
+    const handleDeletePost = () => {
+        // Delete post from database, cloud functions will handle deleting it from other user feeds
+        firestore
+            .collection('users')
+            .doc(currentUser?.uid)
+            .collection('posts')
+            .doc(post.id)
+            .delete()
+            .then(() => {
+                console.log('Document successfully deleted!');
+            })
+            .catch((error) => {
+                console.error('Error removing document: ', error);
+            });
     };
 
     return (
@@ -211,8 +241,26 @@ function Post({ post }) {
                             <BsChat size='27px' type='submit' className='post-interaction-icon' />
                             {commentCount}
                         </span>
+                        <span
+                            role='button'
+                            className='post-interaction-more'
+                            onClick={() => { setMoreOpen(!moreOpen); }}
+                            onKeyDown={() => { setMoreOpen(!moreOpen); }}
+                            tabIndex='0'
+                        >
+                            <AiOutlineEllipsis size='20px' type='submit' />
+
+                        </span>
                     </IconContext.Provider>
                 </div>
+                {moreOpen ? (
+                    <div className='popup-container'>
+                        <div className='popup'>
+                            {post?.user?.username === currentUserInfo?.username ? <button type='button' onClick={handleDeletePost}>Delete</button> : null}
+                            <button type='button' onClick={() => { setMoreOpen(false); }}>Cancel</button>
+                        </div>
+                    </div>
+                ) : null}
             </div>
             <div className='comments-container' style={{ visibility: showComments ? 'visible' : 'hidden' }}>
                 <div className='comments' refresh={comments}>
@@ -237,6 +285,7 @@ function Post({ post }) {
                     />
                 </form>
             </div>
+
         </div>
     );
 }
