@@ -6,7 +6,7 @@ import { stringFromTime } from '../Helper';
 const Comment = ({ comment }) => (
     <div className='comment'>
         <a href={comment?.user?.username} className='comment-profilepic'>
-            <img src={comment?.user?.profile_pic ? comment.user.profile_pic : 'https://via.placeholder.com/150'} alt='Avatar' />
+            <img src={comment?.user?.profile_pic || 'https://via.placeholder.com/150'} alt='Avatar' />
         </a>
         <div>
             <a href={comment?.user?.username} className='comment-username'>{comment?.user?.username}</a>

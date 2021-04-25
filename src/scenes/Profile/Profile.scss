@@ -76,6 +76,7 @@
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 1.5rem;
     align-self: baseline;
+    grid-column: 1;
 
     &-item {
         position: relative;

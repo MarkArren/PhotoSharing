@@ -87,8 +87,17 @@ function Feed() {
             <div className='feed'>
                 <div className='feed-posts'>
                     {feed && feed?.map((post) => <Post post={post} key={post.id} />)}
+                    {feed && feed.length === 0
+                        ? (
+                            <h3>
+                                No posts please follow someone to see posts
+                                or explore posts by clicking &quot;For You&quot; above
+                            </h3>
+                        )
+                        : null}
                 </div>
-                <Stories stories={storyFeed} />
+                {storyFeed && storyFeed.length > 0 ? <Stories stories={storyFeed} /> : null}
+
             </div>
         </div>
     );

@@ -49,7 +49,7 @@ function Stories({ stories }) {
             <div className='story-view'>
                 <img src={stories[currentStoryIndex]?.url} alt='Story' className='story-view-image' />
                 <div className='story-view-info'>
-                    <img className='story-view-profilepic' src={stories[currentStoryIndex]?.user?.profile_pic} alt='Story' />
+                    <img className='story-view-profilepic' src={stories[currentStoryIndex]?.user?.profile_pic || 'https://via.placeholder.com/150'} alt='Story' />
                     <div className='story-view-username'>{stories[currentStoryIndex]?.user?.username}</div>
                     <div className='timestamp'>{stringFromTime(stories[currentStoryIndex]?.timestamp, true)}</div>
                 </div>
