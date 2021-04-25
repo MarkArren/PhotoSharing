@@ -43,12 +43,14 @@ exports.updateProfile = functions.https.onRequest((request, response) => {
  * Remove user from database when account is deleted
  */
 exports.deleteUser = functions.auth.user().onDelete((user) => {
+    // TODO Delete users posts from storage bucket
     db.doc(`users/${user.uid}`).delete().then(() => {
         console.log(`Deleted user ${user.uid} from db`);
     });
 });
 
 /**
+ * Sends a notification to a user
  * @param {number} type 0=following, 1=like, 2=Comment
  * @param {string} toUID UID of user recieving notification
  * @param {string} idToken ID token of logged in user
@@ -346,5 +348,133 @@ exports.updateLikeCount = functions.firestore
             db.doc(`users/${context.params.userID}`)
                 .doc(`/posts/${context.params.postID}`)
                 .update({ likeCount: db.FieldValue.increment(-1) });
+        }
+    });
+
+/**
+ * Cloud function which fans out stories to followers story feed when a story is created or changed
+ */
+exports.fanOutStory = functions.firestore
+    .document('users/{userID}/stories/{storyID}')
+    .onWrite(async (change, context) => {
+        // Get the new story object and set the storyID
+        const newStory = change.after.data();
+
+        // Parameters
+        const { userID, storyID } = context.params;
+
+        // Create batch array to bypass 500 batch write limit
+        const batchArray = [];
+        batchArray.push(db.batch());
+        let operationCounter = 0;
+        let batchIndex = 0;
+
+        // Adding additional data to new story
+        if (!change.before.exists) {
+            newStory.hasViewed = false;
+        }
+        console.log(`new story being fanned out: ${storyID}`);
+
+        // Get all the users followers
+        const followerRefs = await db.collection(`users/${userID}/followers`).get();
+
+        followerRefs.docs.forEach((doc) => {
+            console.log(`Adding to users story feed: ${doc.id}`);
+            const followerID = doc.id;
+            const followerStoryFeedRef = db.doc(`users/${followerID}/storyFeed/${storyID}`);
+
+            if (!change.after.exists && change.before.exists) {
+                // Check for delete
+                batchArray[batchIndex].delete(followerStoryFeedRef);
+            } else {
+                // Not deleting so use set
+                batchArray[batchIndex].set(followerStoryFeedRef, newStory);
+            }
+
+            // Split write batches if over 500
+            operationCounter += 1;
+            if (operationCounter === 499) {
+                batchArray.push(db.batch());
+                batchIndex += 1;
+                operationCounter = 0;
+            }
+        });
+        // Execute batch write
+        batchArray.forEach((batch) => batch.commit());
+
+        if (!change.after.exists && change.before.exists) {
+            // Delete story from users own story feed
+            db.doc(`users/${userID}/storyFeed/${storyID}`).delete();
+
+            // Get refence of image from URL
+            const splitURL = change.before.data().url.split('/');
+            let ref = unescape(splitURL[splitURL.length - 1]);
+            // eslint-disable-next-line prefer-destructuring
+            ref = ref.split('?')[0];
+
+            // Delete image from storage bucket
+            return bucket.file(ref).delete();
+        }
+        // Set story in users own story feed
+        return db.doc(`users/${userID}/storyFeed/${storyID}`).set(newStory);
+    });
+
+/**
+ * When following/unfollowing a user add/remove their stories to/from your feed
+ */
+exports.followUserStoryFeed = functions.firestore
+    .document('users/{userID}/following/{followingID}')
+    .onWrite(async (change, context) => {
+        // Parameters
+        const { userID, followingID } = context.params;
+
+        // Create batch array to bypass 500 batch write limit
+        const batchArray = [];
+        batchArray.push(db.batch());
+        let operationCounter = 0;
+        let batchIndex = 0;
+
+        // Check if following or unfollowing
+        if (!change.after.exists && change.before.exists) {
+            // UNFOLLOWING
+            const feedCollectionRef = db.collection(`users/${userID}/storyFeed`);
+            const followingStories = await feedCollectionRef.where('user.uid', '==', followingID).get();
+
+            // Delete all posts from story feed
+            followingStories.forEach((doc) => {
+                batchArray[batchIndex].delete(doc.ref);
+
+                // Split write batches if over 500
+                operationCounter += 1;
+                if (operationCounter === 499) {
+                    batchArray.push(db.batch());
+                    batchIndex += 1;
+                    operationCounter = 0;
+                }
+            });
+            // Execute batch delete
+            batchArray.forEach((batch) => batch.commit());
+        } else {
+            // FOLLOWING
+            // Get all following users stories
+            const followingStoriesRef = await db.collection(`users/${followingID}/stories`).get();
+
+            // Add all of following users stories to own users feed
+            followingStoriesRef.forEach((doc) => {
+                const storyID = doc.id;
+                const usersStoryFeedRef = db.doc(`users/${userID}/storyFeed/${storyID}`);
+
+                batchArray[batchIndex].set(usersStoryFeedRef, doc.data());
+
+                // Split write batches if over 500
+                operationCounter += 1;
+                if (operationCounter === 499) {
+                    batchArray.push(db.batch());
+                    batchIndex += 1;
+                    operationCounter = 0;
+                }
+            });
+            // Execute batch write
+            batchArray.forEach((batch) => batch.commit());
         }
     });

@@ -11,7 +11,11 @@ function Feed() {
     const { currentUser } = useAuth();
     const [feed, setFeed] = useState(null);
     const [feedType, setFeedType] = useState(0);
+    const [storyFeed, setStoryFeed] = useState(null);
 
+    /**
+     * Fecthes user feed depending on feedType
+     */
     useEffect(() => {
         if (feedType === 0) {
             const unsubscribe = firestore
@@ -47,6 +51,32 @@ function Feed() {
         return unsubscribe;
     }, [feedType]);
 
+    /**
+     * Fetches users story feed from database
+     */
+    useEffect(() => {
+        const date = new Date();
+        date.setDate(date.getDate() - 1);
+
+        const unsubscribe = firestore
+            .collection('users')
+            .doc(currentUser.uid)
+            .collection('storyFeed')
+            .where('timestamp', '>', date)
+            .orderBy('timestamp', 'desc')
+            .get()
+            .then((querySnapshot) => {
+                const data = querySnapshot.docs.map((doc) => {
+                    const story = doc.data();
+                    story.id = doc.id;
+                    return story;
+                });
+                setStoryFeed(data);
+                console.log(data);
+            });
+        return unsubscribe;
+    }, []);
+
     return (
         <div>
             <Navbar />
@@ -58,7 +88,7 @@ function Feed() {
                 <div className='feed-posts'>
                     {feed && feed?.map((post) => <Post post={post} key={post.id} />)}
                 </div>
-                <Stories />
+                <Stories stories={storyFeed} />
             </div>
         </div>
     );

@@ -119,7 +119,7 @@ export async function followUser(currentUser, currentUserInfo, user, unfollow = 
 }
 
 /**
- *
+ * Uploads post to users 'posts' subcollection
  * @param {user} currentUser Current logged in user
  * @param {user} currentUserInfo Current logged in user info
  * @param {file} image Image to upload
@@ -154,6 +154,55 @@ export async function uploadPost(currentUser, currentUserInfo, image, caption) {
                 commentCount: 0,
                 likeCount: 0,
                 topComments: [],
+            });
+
+        return 1;
+    };
+
+    // Set callbacks for uploading task
+    uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+            // setProgress(Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100));
+        },
+        (error) => { console.error(error); },
+        () => complete(),
+    );
+
+    return 1;
+}
+
+/**
+ * Uploads story to users 'storys' subcollection
+ * @param {user} currentUser Current logged in user
+ * @param {user} currentUserInfo Current logged in user info
+ * @param {file} image Image to upload
+ * @returns {Promise} 1
+ */
+export async function uploadStory(currentUser, currentUserInfo, image) {
+    const filename = `users/${currentUser.uid}/stories/${uuidv4()}`;
+    const uploadTask = storage.ref(filename).put(image);
+
+    // Function which is run when upload task is complete
+    const complete = async () => {
+        // Get url of image
+        const url = await storage.ref(filename).getDownloadURL();
+
+        // Upload story to DB
+        await firestore
+            .collection('users')
+            .doc(currentUser.uid)
+            .collection('stories')
+            .add({
+                url,
+                timestamp: new Date(),
+                // Extra info for feed
+                user: {
+                    username: currentUserInfo.username,
+                    name: currentUserInfo.name,
+                    uid: currentUser.uid,
+                    profile_pic: currentUserInfo?.profile_pic,
+                },
             });
 
         return 1;

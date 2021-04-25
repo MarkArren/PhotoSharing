@@ -20,7 +20,12 @@ function Profile(props) {
     const [user, setUser] = useState(null);
     const [userExists, setUserExists] = useState(true);
     const [doesFollow, setDoesFollow] = useState(false);
+    const [stories, setStories] = useState();
 
+    /**
+     * Follows or unfollowers user and updates required states
+     * @returns {Promise} If successful
+     */
     async function handleFollow() {
         if (!currentUser || !user) {
             return;
@@ -47,6 +52,9 @@ function Profile(props) {
         console.log('message button pressed');
     }
 
+    /**
+     * On page load fetch all users information and their posts
+     */
     useEffect(() => {
         if (!props.match.params.username) {
             setUserExists(false);
@@ -91,6 +99,28 @@ function Profile(props) {
                     firestore.doc(`users/${tempUser.uid}/followers/${currentUser?.uid}`).get().then((doc) => {
                         if (doc.exists) { setDoesFollow(true); }
                     });
+
+                    // Get target users stories
+                    const date = new Date();
+                    date.setDate(date.getDate() - 1);
+                    firestore.doc(`users/${tempUser.uid}`).collection('stories').orderBy('timestamp', 'desc').where('timestamp', '>', date)
+                        .get()
+                        .then((querySnapshot2) => {
+                            const data = querySnapshot2.docs.map((doc) => {
+                                const story = doc.data();
+                                story.id = doc.id;
+
+                                // Add owner of post
+                                story.user = {
+                                    name: tempUser?.name,
+                                    username: tempUser?.username,
+                                    uid: tempUser?.uid,
+                                };
+                                return story;
+                            });
+                            setStories(data);
+                            console.log(data);
+                        });
                 }
             }, () => {
                 // Couldn't find username
@@ -109,7 +139,7 @@ function Profile(props) {
         userExists
             ? (
                 <div className='profile-page'>
-                    <Navbar className={showPost ? 'blur' : ''} username={currentUserInfo?.username} />
+                    <Navbar />
                     <div className={`profile-container ${showPost ? 'blur' : ''}`}>
                         <div className='profile'>
                             <div className='profile-image'>
@@ -172,7 +202,7 @@ function Profile(props) {
                                 </div>
                             </div>
                         </div>
-                        <Stories />
+                        {stories && stories.length > 1 ? <Stories stories={stories} /> : null}
                         <div className='gallery'>
                             {posts
                         && posts?.map((post, index) => (
