@@ -49,7 +49,7 @@ const Notification = ({ notification }) => {
     return (
         <div className='notification'>
             <a href={notification?.user?.username} className='notification-profilepic'>
-                <img src={notification?.user?.profile_pic ? notification.user.profile_pic : 'https://via.placeholder.com/150'} alt='Avatar' />
+                <img src={notification?.user?.profile_pic || 'https://via.placeholder.com/150'} alt='Avatar' />
             </a>
             <div>
                 <a href={notification?.user?.username} className='notification-username'>{notification?.user?.username}</a>

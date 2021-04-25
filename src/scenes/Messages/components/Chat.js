@@ -37,13 +37,13 @@ function Chat({ contact, inMessage, setInMessage }) {
             username: currentUserInfo.username,
             name: currentUserInfo.name,
             uid: currentUser.uid,
-            profile_pic: currentUserInfo.profile_pic ? currentUserInfo.profile_pic : 'https://via.placeholder.com/150',
+            profile_pic: currentUserInfo?.profile_pic || '',
         };
         const user2 = {
             username: contact.username,
             name: contact.name,
             uid: contact.uid,
-            profile_pic: contact.profile_pic ? contact.profile_pic : 'https://via.placeholder.com/150',
+            profile_pic: contact?.profile_pic || '',
         };
 
         // Add message temporarly to messages array to avoid reading DB again
@@ -90,7 +90,7 @@ function Chat({ contact, inMessage, setInMessage }) {
                     </button>
 
                     <div>
-                        <img src={contact?.profile_pic ? contact?.profile_pic : 'https://via.placeholder.com/150'} alt='Avatar' />
+                        <img src={contact?.profile_pic || 'https://via.placeholder.com/150'} alt='Avatar' />
                     </div>
                     <div>{contact?.username}</div>
                 </div>

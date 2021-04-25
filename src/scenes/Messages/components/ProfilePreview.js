@@ -6,7 +6,7 @@ const ProfilePreview = ({ profile }) => (
     <div className='profile-preview'>
 
         <a href={profile?.username} className='profile-preview-profilepic'>
-            <img src={profile?.profile_pic ? profile.profile_pic : 'https://via.placeholder.com/150'} alt='Avatar' />
+            <img src={profile?.profile_pic || 'https://via.placeholder.com/150'} alt='Avatar' />
         </a>
         <span href={profile?.username} className='profile-preview-username'>{profile?.username}</span>
         <span href={profile?.username} className='profile-preview-name'>{profile?.name}</span>

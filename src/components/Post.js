@@ -81,7 +81,7 @@ function Post({ post }) {
                     username: currentUserInfo.username,
                     name: currentUserInfo.name,
                     uid: currentUser.uid,
-                    profile_pic: currentUserInfo.profile_pic ? currentUserInfo.profile_pic : '',
+                    profile_pic: currentUserInfo?.profile_pic || '',
                 },
                 timestamp: new Date(),
             })
@@ -189,7 +189,7 @@ function Post({ post }) {
                     <a className='post-top-profilepic' href={post?.user?.username}>
                         <img
                             alt='test'
-                            src={post?.user?.profile_pic ? post.user.profile_pic : 'https://via.placeholder.com/200'}
+                            src={post?.user?.profile_pic || 'https://via.placeholder.com/200'}
                         />
                     </a>
                     <a className='post-top-name' href={post?.user?.username}>{post?.user?.name}</a>

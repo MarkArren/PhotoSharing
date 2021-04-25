@@ -144,11 +144,7 @@ function Profile(props) {
                         <div className='profile'>
                             <div className='profile-image'>
                                 <img
-                                    src={
-                                        user?.profile_pic
-                                            ? user?.profile_pic
-                                            : 'https://via.placeholder.com/200x200'
-                                    }
+                                    src={user?.profile_pic || 'https://via.placeholder.com/200x200'}
                                     alt='profile-pic'
                                 />
                             </div>
@@ -202,7 +198,7 @@ function Profile(props) {
                                 </div>
                             </div>
                         </div>
-                        {stories && stories.length > 1 ? <Stories stories={stories} /> : null}
+                        {stories && stories.length > 0 ? <Stories stories={stories} /> : null}
                         <div className='gallery'>
                             {posts
                         && posts?.map((post, index) => (

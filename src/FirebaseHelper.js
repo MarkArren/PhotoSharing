@@ -149,7 +149,7 @@ export async function uploadPost(currentUser, currentUserInfo, image, caption) {
                     username: currentUserInfo.username,
                     name: currentUserInfo.name,
                     uid: currentUser.uid,
-                    profile_pic: currentUserInfo?.profile_pic,
+                    profile_pic: currentUserInfo?.profile_pic || '',
                 },
                 commentCount: 0,
                 likeCount: 0,
@@ -201,7 +201,7 @@ export async function uploadStory(currentUser, currentUserInfo, image) {
                     username: currentUserInfo.username,
                     name: currentUserInfo.name,
                     uid: currentUser.uid,
-                    profile_pic: currentUserInfo?.profile_pic,
+                    profile_pic: currentUserInfo?.profile_pic || '',
                 },
             });
 
