@@ -6,14 +6,12 @@ import { MdNotifications } from 'react-icons/md';
 import { AiOutlineUser, AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import { IoAddCircleOutline } from 'react-icons/io5';
 import { IconContext } from 'react-icons';
-import PropTypes from 'prop-types';
 import { useAuth } from '../context/AuthConext';
 import Notification from './Notification';
 import { firestore } from '../services/firebase';
 
-function Navbar(props) {
+function Navbar() {
     const { currentUser, currentUserInfo } = useAuth();
-    const { className } = props;
     const [navMobileOpen, setNavMobileOpen] = useState(false);
     const searchRef = useRef();
 
@@ -30,6 +28,9 @@ function Navbar(props) {
 
     }
 
+    /**
+     * Sets notifications when notificationsOpen is set to true
+     */
     useEffect(() => {
         if (notificationsOpen) {
             const unsubscribe = firestore
@@ -53,30 +54,31 @@ function Navbar(props) {
     const notificationBox = (
 
         <div className={notificationsOpen ? 'nav-notifications' : 'hide'}>
-
-            <span className='nav-notifications-title'>{notifications?.lenth < 1 ? 'Notifications' : 'No notifications'}</span>
-            {notifications
+            <div className='notifications-container'>
+                <span className='nav-notifications-title'>{notifications?.lenth < 1 ? 'Notifications' : 'No notifications'}</span>
+                {notifications
             && notifications?.map((notification) => (
                 <Notification notification={notification} key={notification.id} />
             ))}
+            </div>
         </div>
 
     );
 
     return (
-        <div className={`nav ${className || ''}`}>
+        <div className='nav'>
             <Link to='/' className='nav-left'>
-                <h3>ProjectName</h3>
+                <h3>PhotoSharing</h3>
             </Link>
             <div className='nav-right'>
-                <form onSubmit={handleSearch}>
+                {/* <form onSubmit={handleSearch}>
                     <input
                         type='text'
                         ref={searchRef}
                         placeholder='Search'
                         className='nav-right-search'
                     />
-                </form>
+                </form> */}
                 <Link to='/upload' className='nav-icon'>
                     <IoAddCircleOutline />
                 </Link>
@@ -130,11 +132,3 @@ function Navbar(props) {
 }
 
 export default Navbar;
-
-Navbar.propTypes = {
-    className: PropTypes.string,
-};
-
-Navbar.defaultProps = {
-    className: '',
-};

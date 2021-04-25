@@ -20,21 +20,10 @@ function MessagePreview({ conversation }) {
 
     return (
         <span className='message-preview'>
-            {/* <div className='message-preview-profilepic'>
-                <img src={conversation?.user?.profile_pic ? conversation.user.profile_pic : 'https://via.placeholder.com/150'} alt='Avatar' />
-            </div>
-            <div>{conversation?.user?.username}</div>
-            <div>
-                {conversation?.lastMessage}
-                ... 3d ago
-            </div> */}
-            <a href={contact?.username} className='message-preview-profilepic'>
-                <img src={contact?.profile_pic ? contact.profile_pic : 'https://via.placeholder.com/150'} alt='Avatar' />
-            </a>
+            <img className='message-preview-profilepic' src={contact?.profile_pic ? contact.profile_pic : 'https://via.placeholder.com/150'} alt='Avatar' />
             <span href={contact?.username} className='message-preview-username'>{contact?.username}</span>
             <span className='message-preview-text'>{conversation?.lastMessage}</span>
             <span className='message-preview-timestamp'>{conversation?.timestamp ? stringFromTime(conversation.timestamp, true) : '...'}</span>
-
         </span>
     );
 }

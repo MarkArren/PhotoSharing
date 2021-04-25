@@ -22,6 +22,11 @@ const Messages = () => {
 
     const [inMessage, setInMessage] = useState(false);
 
+    /**
+     * Gets user from a conversation
+     * @param {conversation} conversation Conversation to get user from
+     * @returns user
+     */
     const getUserFromConvo = (conversation) => {
         if (conversation?.user1?.uid === currentUser?.uid) {
             return conversation?.user2;
@@ -29,7 +34,10 @@ const Messages = () => {
         return conversation?.user1;
     };
 
-    // Composes a conversation with a user
+    /**
+     * Composes a conversation with a user
+     * @param {user} user User to compose a conversation with
+     */
     const composeConversation = (user) => {
         setShowCompose(false);
         const messagesListTemp = messagesList;
@@ -53,14 +61,19 @@ const Messages = () => {
         setInMessage(true);
     };
 
-    // Change the selected message
+    /**
+     * Changes the selected message
+     * @param {conversation} conversation Converastion to be changed to
+     */
     const changeSelectedMessage = (conversation) => {
         const contact = getUserFromConvo(conversation);
         setSelectedMessage(contact);
         setInMessage(true);
     };
 
-    // Fetch user conversations
+    /**
+     * Fetch user conversations
+     */
     useEffect(() => {
         const unsubscribe = firestore
             .collection('messages')
@@ -79,7 +92,9 @@ const Messages = () => {
         return unsubscribe;
     }, [setMessagesList]);
 
-    // Fetch all users on app
+    /**
+     * Fetch all users on app
+     */
     useEffect(() => {
         if (showCompose) {
             // console.log('show compose true');

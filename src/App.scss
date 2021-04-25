@@ -13,6 +13,10 @@ $scrollbarThumbColour: hsl(0, 0%, 20%);
 $scrollbarTrackColour: hsl(0, 0%, 10%);
 
 $submitColour: #7ebbdb;
+$errorColour: #aa0000;
+$messageColour: #7ebbdb;
+
+
 
 @mixin scrollbar {
     &::-webkit-scrollbar {

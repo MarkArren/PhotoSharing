@@ -55,14 +55,16 @@
 
 
         width: 350px;
-        height: 700px;
+        // height: 700px;
 
-        padding: 1rem;
-        padding-top: 0;
+        // padding: 1rem;
+        // padding-top: 0;
         border-radius: 10px;
         background-color: $backgroundColour2;
         box-shadow: 0 0 5px 1px $backgroundColour;
         z-index: 998;
+        // overflow-y: hidden;
+        // overflow-x: visible;
 
         &-title{
             font-size: 1.5rem;
@@ -83,10 +85,22 @@
             height: 15px;
             content: '\00a0';
             transform: rotate(45deg);
+            z-index: -1;
         }
 
 
     }
+}
+
+.notifications-container{
+    overflow-y: scroll;
+    padding: 1rem;
+    padding-top: 0;
+    margin-top: 0.5rem;
+    height: 700px;
+    @include scrollbar2;
+    border-radius: 10px;
+    z-index: 999;
 }
 
 .notification {

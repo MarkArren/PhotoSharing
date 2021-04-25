@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { IconContext } from 'react-icons';
 import { VscHeart } from 'react-icons/vsc';
 import { BsChat } from 'react-icons/bs';
-import { AiOutlineSend, AiOutlineMore, AiOutlineEllipsis } from 'react-icons/ai';
+import { AiOutlineSend, AiOutlineEllipsis } from 'react-icons/ai';
 import { RiHeartFill } from 'react-icons/ri';
 import PropTypes, { object } from 'prop-types';
 import { sendNotification } from '../FirebaseHelper';

@@ -17,6 +17,10 @@ const Notification = ({ notification }) => {
         text = 'commented on your post';
     }
 
+    /**
+     * Handles the follow button being pressed
+     * @returns {Promise}
+     */
     async function handleFollow() {
         if (!currentUser || !notification?.user) {
             return;
@@ -27,13 +31,9 @@ const Notification = ({ notification }) => {
 
         if (result === 1) {
             // User now following
-            const tempUser = notification.user;
-            tempUser.followers += 1;
             setDoesFollow(true);
         } else if (result === 2) {
             // User now unfollowing
-            const tempUser = notification.user;
-            tempUser.followers -= 1;
             setDoesFollow(false);
         }
     }
