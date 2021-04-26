@@ -7,7 +7,7 @@ The technologies used are React, a JavaScript library used to create interactive
 
 
 # Contents
-* 1 Introduction
+* 1 [Introduction](./docs/Introduction.md)
 * 2 Firebase Database
     * 2.1 [User](./docs/Firestore.md#User)
     * 2.2 [Post](./docs/Firestore.md#Post)
