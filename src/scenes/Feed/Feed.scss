@@ -11,15 +11,18 @@
     border-bottom: hsl(0, 0%, 15%) 1px solid;
     color: $textColour2;
 
-    > div:first-child {
-        border-right: $borderColour 2px solid;
-        padding-right: 50px;
-        margin-right: 50px;
+    &-divider{
+        border-left: $borderColour 2px solid;
+        margin: 0 50px;
+        height: 60%;
+    }
+
+    &-text{
+        cursor: pointer;
     }
 
     .active{
         color: $textColour;
-        font-weight: 700;
     }
 }
 
