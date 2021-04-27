@@ -1,15 +1,18 @@
 # **Firebase Database**
 ## Database Structure
     .
-    ├── messages
-    └── users
-        ├── posts
-        ├── feed
-        ├── stories
-        ├── storyFeed
-        ├── followers
-        ├── following
-        └── notifications
+    ├── messages                        collection
+    │   └── combinedUID                 document
+    └── users                           collection
+        └── UUID                        document
+            ├── posts                   collection
+            ├── feed                    collection
+            ├── stories                 collection
+            ├── storyFeed               collection
+            ├── followers               collection
+            ├── following               collection
+            └── notifications           collection
+
 # User
 UUID - User Unique Identifier
 
@@ -31,7 +34,7 @@ This document stores the following fields about the user
 The sub-collections are important as they store the majority of the user data
 
 ### Posts
-Post stores all posts which are uploaded by the user themselves. Each document uses an automatically generated UID for the ID. Please see [here](#Post) for more information on each post document
+Post stores all posts which are uploaded by the user themselves. Posts are added to the users `posts` collection by the helper function [`uploadPost`](./HelperFunctions.md#uploadPost). Each document uses an automatically generated UID for the ID please see [here](#Post) for more information on each post document.
 
 ### Feed
 Feed stores duplicate documents of every post from the users that they follow but only includes the field values, see [post](#Post) for more information. The only additional field which is added is `hasLiked` which sets if the user has liked that post.
@@ -81,7 +84,6 @@ Post is a document which stores all information related to a post.
 ## Fields
 * caption - Caption of post
 * url - URL of image stored in storage bucket
-<!-- TODO talk about helper function which uploads this maybe in upload component -->
 * timestamp
 * commentCount - Count of comments
 * likeCount - Count of likes
@@ -93,6 +95,7 @@ Post is a document which stores all information related to a post.
 
 Notice that as a field it stores the user (author) of the post even though its already in the user’s sub-collection this is because when the cloud function fans the post out to every follower feed it needs this extra information. See [here](./CloudFunctions.md#createPostFeeds) for more information regarding the cloud function.
 <!-- TODO talk more about this maybe inside writeup? -->
+<!-- TODO talk about helper function which uploads this maybe in upload component -->
 
 ## Collections
 ### Likes

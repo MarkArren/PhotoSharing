@@ -38,4 +38,4 @@ The technologies used are React, a JavaScript library used to create interactive
     * 6.2 [followUser](./docs/HelperFunctions.md#followUser)
     * 6.3 [uploadPost](./docs/HelperFunctions.md#uploadPost)
     * 6.4 [uploadStory](./docs/HelperFunctions.md#uploadStory)
-
+* 7 [Storage Bucket](./docs/StorageBucket.md)

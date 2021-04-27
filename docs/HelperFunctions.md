@@ -51,3 +51,5 @@ The function first uploads the image to the storage bucket where it is stored an
  * currentUser - Current logged in user
  * currentUserInfo - Current logged in user info
  * image - Image to upload
+
+### [Chapter 7 Storage Bucket](./StorageBucket.md)
