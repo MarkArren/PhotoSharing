@@ -218,3 +218,54 @@ export async function uploadStory(currentUser, currentUserInfo, image) {
         () => complete(),
     );
 }
+
+/**
+ * Uploads all users posts and stories with their new profile information.
+ * To be used when a user changes their name, username or profile picture
+ * @param {user} currentUser Current logged in user
+ * @returns {Promise} 1
+ */
+export async function updatePostsAndStories(currentUser) {
+    const userDocRef = firestore.collection('users').doc(currentUser.uid);
+
+    // Get current users information
+    const userDoc = await userDocRef.get().catch(() => {
+        throw new Error('Failed to fetch user document');
+    });
+
+    // Check if user document exists
+    if (!userDoc.exists) {
+        throw new Error('User document does not exist');
+    }
+
+    const user = userDoc.data();
+
+    // Function which loops through all documents and sets user info
+    const updateDocuments = (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            // For each post set the user values
+            doc.ref.set({
+                user: {
+                    name: user.name,
+                    username: user.username,
+                    profile_pic: user?.profile_pic || '',
+                },
+            },
+            { merge: true });
+        });
+    };
+
+    // Update all users posts with new information
+    userDocRef.collection('posts').get()
+        .then(updateDocuments)
+        .catch((error) => {
+            console.error('Error updating users posts: ', error);
+        });
+
+    // Update all users stories with new information
+    userDocRef.collection('stories').get()
+        .then(updateDocuments)
+        .catch((error) => {
+            console.error('Error updating users stories: ', error);
+        });
+}

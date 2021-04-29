@@ -1,5 +1,3 @@
-/* eslint-disable react/no-this-in-sfc */
-/* eslint-disable no-return-assign */
 import React, { useRef, useState } from 'react';
 import { useAuth } from '../../../context/AuthConext';
 import Navbar from '../../../components/Navbar';
@@ -11,7 +9,6 @@ const EditProfile = () => {
     const {
         changeUsername, changeName, changeBio, changeEmail, changeProfilePic,
     } = useAuth();
-    // const [username, setUsername] = useState(null);
     const emailRef = useRef('test');
     const usernameRef = useRef();
     const nameRef = useRef();
@@ -23,52 +20,38 @@ const EditProfile = () => {
     async function handleSubmit(e) {
         e.preventDefault();
         setError('');
-
-        // If username changed try to change username
-        if (!(usernameRef.current.value === currentUserInfo.username)) {
-            try {
+        try {
+            // If username changed try to change username
+            if (!(usernameRef.current.value === currentUserInfo.username)) {
                 await changeUsername(usernameRef.current.value);
-            } catch (exception) {
-                setError(exception.message);
-                return;
             }
-        }
-
-        // check if email is taken and required
-        if (!(emailRef.current.value === currentUser.email)) {
-            try {
+            // check if email is taken and required
+            if (!(emailRef.current.value === currentUser.email)) {
                 await changeEmail(emailRef.current.value);
-            } catch (exception) {
-                setError(exception.message);
-                return;
             }
-        }
 
-        // Check if file has been uploaded and update it
-        if (imageRef.current.files[0]) {
-            try {
+            // Check if file has been uploaded and update it
+            if (imageRef.current.files[0]) {
                 await changeProfilePic(imageRef.current.files[0]);
-            } catch (exception) {
-                setError(exception.message);
-                return;
             }
-        }
 
-        // Check if name changed and update
-        if (!(nameRef.current.value === currentUserInfo.name)) {
-            changeName(nameRef.current.value);
-        }
+            // Check if name changed and update
+            if (!(nameRef.current.value === currentUserInfo.name)) {
+                changeName(nameRef.current.value);
+            }
 
-        // Check if bio changed and update
-        if (!(bioRef.current.value === currentUserInfo.bio)) {
-            console.log('bio changed');
-            changeBio(bioRef.current.value);
+            // Check if bio changed and update
+            if (!(bioRef.current.value === currentUserInfo.bio)) {
+                changeBio(bioRef.current.value);
+            }
+        } catch (exception) {
+            setError(exception.message);
+            return;
         }
 
         setError('Profile Updated');
     }
 
-    // console.log(currentUser);
     return (
         <div>
             <Navbar />

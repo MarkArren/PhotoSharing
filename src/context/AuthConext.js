@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import {
     auth, firestore, googleProvider, storage,
 } from '../services/firebase';
+import { updatePostsAndStories } from '../FirebaseHelper';
 
 const AuthContext = React.createContext();
 
@@ -16,37 +17,44 @@ export function AuthProvider({ children }) {
     const [currentUserInfo, setCurrentUserInfo] = useState();
     const [loading, setLoading] = useState(true);
 
-    // Log in user
+    /**
+     * Logs in user
+     * @param {string} email Email
+     * @param {string} password Password
+     * @returns Promise
+     */
     function login(email, password) {
         return auth.signInWithEmailAndPassword(email, password);
     }
 
-    // Log in user
-    function loginWithGoogle() {
-        return auth.signInWithPopup(googleProvider).then((user) => {
-            // Create user after google sign in
-            if (user) {
-                console.log(user);
-                // If user is new then create user in database
-                if (user.additionalUserInfo.isNewUser) {
-                    firestore
-                        .collection('users')
-                        .doc(user.user.uid)
-                        .set({
-                            username: user.user.uid,
-                            name: user.user.uid,
-                        })
-                        .then(null, () => {
-                            throw new Error('Cant create username');
-                        });
-                }
-            } else {
-                throw new Error('Promise did not return user');
-            }
+    /**
+     * Logs in user with google
+     */
+    async function loginWithGoogle() {
+        const user = await auth.signInWithPopup(googleProvider).catch((error) => {
+            throw new Error('Failed to signin', error);
         });
+
+        // Checks if user is new user to add them to the database
+        if (user.additionalUserInfo.isNewUser) {
+            await firestore.collection('users').doc(user.user.uid)
+                .set({
+                    username: user.user.uid,
+                    name: user.user.uid,
+                })
+                .catch(() => {
+                    throw new Error('Failed to create user document');
+                });
+        }
     }
 
-    // Sign up user
+    /**
+     * Signs up user with the parameters
+     * @param {String} email Email
+     * @param {String} password Password
+     * @param {String} username Username
+     * @param {String} name Name
+     */
     async function signup(email, password, username, name) {
         // Check if username is unique
         const querySnapshot = await firestore
@@ -54,27 +62,25 @@ export function AuthProvider({ children }) {
             .where('username', '==', username)
             .get();
 
-        if (querySnapshot.empty) {
-            // Create user as username is unique
-            const user = await auth.createUserWithEmailAndPassword(email, password);
-
-            // Create user in database
-            if (user) {
-                firestore
-                    .collection('users')
-                    .doc(user.user.uid)
-                    .set({
-                        username,
-                        name,
-                    })
-                    .then(null, () => {
-                        throw new Error('Cant create username');
-                    });
-            }
-        } else {
-            // Username not unique throw error
+        // Username not unique so throw error
+        if (!querySnapshot.empty) {
             throw new Error('Username already exists');
         }
+
+        // Create user as username is unique
+        const user = await auth.createUserWithEmailAndPassword(email, password).catch((e) => {
+            throw new Error('Failed to create user in auth', e);
+        });
+
+        // Create user in database
+        firestore.collection('users').doc(user.user.uid)
+            .set({
+                username,
+                name,
+            })
+            .catch(() => {
+                throw new Error('Failed to create user document');
+            });
     }
 
     async function changeUsername(username) {
@@ -90,43 +96,49 @@ export function AuthProvider({ children }) {
             .where('username', '==', username)
             .get();
 
-        if (querySnapshot.empty) {
-            // Change username of current user as its unique
-            firestore
-                .collection('users')
-                .doc(currentUser.uid)
-                .set(
-                    {
-                        username,
-                    },
-                    { merge: true },
-                )
-                .then(null, () => {
-                    throw new Error('Cant create username');
-                });
-        } else {
+        if (!querySnapshot.empty) {
             // Username not unique throw error
             throw new Error('Username already exists');
         }
+
+        // Change username of current user as its unique
+        await firestore
+            .collection('users')
+            .doc(currentUser.uid)
+            .set({ username }, { merge: true })
+            .catch((error) => {
+                throw new Error('Failed to change username in document', error);
+            });
+
+        // Change username in currentUserInfo
+        const newCurrentUserInfo = currentUserInfo;
+        newCurrentUserInfo.username = username;
+        setCurrentUserInfo(newCurrentUserInfo);
+
+        // Update users posts to match
+        await updatePostsAndStories(currentUser);
     }
 
-    function changeName(name) {
-        // Check if username is equal to current username
+    async function changeName(name) {
+        // Check if name is equal to current name
         if (name === currentUserInfo.name) throw new Error('Username not changed');
 
         // Update name
-        firestore
+        await firestore
             .collection('users')
             .doc(currentUser.uid)
-            .set(
-                {
-                    name,
-                },
-                { merge: true },
-            )
-            .then(null, () => {
+            .set({ name }, { merge: true })
+            .catch(() => {
                 throw new Error('Cant change name');
             });
+
+        // Change name in currentUserInfo
+        const newCurrentUserInfo = currentUserInfo;
+        newCurrentUserInfo.name = name;
+        setCurrentUserInfo(newCurrentUserInfo);
+
+        // Update users posts to match
+        await updatePostsAndStories(currentUser);
     }
 
     function changeBio(bio) {
@@ -134,23 +146,17 @@ export function AuthProvider({ children }) {
         if (bio === currentUserInfo.bio) throw new Error('Bio not changed');
 
         // Update bio
-        firestore
+        return firestore
             .collection('users')
             .doc(currentUser.uid)
-            .set(
-                {
-                    bio,
-                },
-                { merge: true },
-            )
-            .then(null, () => {
-                throw new Error('Cant change bio');
+            .set({ bio }, { merge: true })
+            .catch(() => {
+                throw new Error('Failed to change bio in document');
             });
     }
 
     function changeEmail(email) {
-        const updateEmailPromise = currentUser.updateEmail(email);
-        updateEmailPromise.then(null, (error) => {
+        return currentUser.updateEmail(email).catch((error) => {
             if (error.code === 'auth/requires-recent-login') {
                 // TODO Get user to log in again to change email
             }
@@ -158,39 +164,38 @@ export function AuthProvider({ children }) {
         });
     }
 
-    function changeProfilePic(image) {
-        // Check if image is empty
+    async function changeProfilePic(image) {
+        // Check if image is empty and is an image
         if (!image) throw new Error('Image is empty');
-        // Check if file is image
-        if (image.type !== 'image/png' && image.type !== 'image/jpeg') throw new Error('Profile picture is not an image');
+        if (image.type !== 'image/png' && image.type !== 'image/jpeg') {
+            throw new Error('Profile picture is not an image');
+        }
 
+        // Uploads image to storage with the filename
         const filename = `users/${currentUser.uid}/${uuidv4()}`;
-        const uploadTask = storage.ref(filename).put(image);
+        const uploadTask = await storage.ref(filename).put(image).catch(() => {
+            throw new Error('Failed to upload image to storage bucket');
+        });
 
-        uploadTask.on(
-            'state_changed',
-            null,
-            (error) => {
-                throw new Error(error);
-            },
-            () => {
-                uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                    // Update profile pic url in DB
-                    firestore
-                        .collection('users')
-                        .doc(currentUser.uid)
-                        .set(
-                            {
-                                profile_pic: downloadURL,
-                            },
-                            { merge: true },
-                        )
-                        .then(null, () => {
-                            throw new Error('Cant change profile picture');
-                        });
-                });
-            },
-        );
+        // Get download url of image
+        const downloadURL = await uploadTask.snapshot.ref.getDownloadURL().catch(() => {
+            throw new Error('Failed to get download url');
+        });
+
+        // Set profile pic to download url in documents
+        await firestore.collection('users').doc(currentUser.uid)
+            .set({ profile_pic: downloadURL }, { merge: true })
+            .catch(() => {
+                throw new Error('Failed to set profile picture in document');
+            });
+
+        // Change profile_pic in currentUserInfo
+        const newCurrentUserInfo = currentUserInfo;
+        newCurrentUserInfo.profile_pic = downloadURL;
+        setCurrentUserInfo(newCurrentUserInfo);
+
+        // Update users posts to match
+        await updatePostsAndStories(currentUser);
     }
 
     // Logout user
