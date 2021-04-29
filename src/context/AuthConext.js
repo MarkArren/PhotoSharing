@@ -83,6 +83,10 @@ export function AuthProvider({ children }) {
             });
     }
 
+    /**
+     * Changes username of user
+     * @param {String} username Username
+     */
     async function changeUsername(username) {
         // Check if username is not blank
         if (!username || username.trim().length === 0) throw new Error('Username empty');
@@ -119,6 +123,10 @@ export function AuthProvider({ children }) {
         await updatePostsAndStories(currentUser);
     }
 
+    /**
+     * Changes name of user
+     * @param {String} name Name
+     */
     async function changeName(name) {
         // Check if name is equal to current name
         if (name === currentUserInfo.name) throw new Error('Username not changed');
@@ -141,20 +149,34 @@ export function AuthProvider({ children }) {
         await updatePostsAndStories(currentUser);
     }
 
-    function changeBio(bio) {
+    /**
+     * Changes user bio
+     * @param {String} bio Bio
+     */
+    async function changeBio(bio) {
         // Check if username is equal to current username
         if (bio === currentUserInfo.bio) throw new Error('Bio not changed');
 
         // Update bio
-        return firestore
+        await firestore
             .collection('users')
             .doc(currentUser.uid)
             .set({ bio }, { merge: true })
             .catch(() => {
                 throw new Error('Failed to change bio in document');
             });
+
+        // Change bio in currentUserInfo
+        const newCurrentUserInfo = currentUserInfo;
+        newCurrentUserInfo.bio = bio;
+        setCurrentUserInfo(newCurrentUserInfo);
     }
 
+    /**
+     * Changes user email
+     * @param {String} email
+     * @returns
+     */
     function changeEmail(email) {
         return currentUser.updateEmail(email).catch((error) => {
             if (error.code === 'auth/requires-recent-login') {
@@ -164,6 +186,10 @@ export function AuthProvider({ children }) {
         });
     }
 
+    /**
+     * Changes user profile picture
+     * @param {File} image Profile picture
+     */
     async function changeProfilePic(image) {
         // Check if image is empty and is an image
         if (!image) throw new Error('Image is empty');
@@ -173,40 +199,61 @@ export function AuthProvider({ children }) {
 
         // Uploads image to storage with the filename
         const filename = `users/${currentUser.uid}/${uuidv4()}`;
-        const uploadTask = await storage.ref(filename).put(image).catch(() => {
-            throw new Error('Failed to upload image to storage bucket');
-        });
+        const uploadTask = storage.ref(filename).put(image);
 
-        // Get download url of image
-        const downloadURL = await uploadTask.snapshot.ref.getDownloadURL().catch(() => {
-            throw new Error('Failed to get download url');
-        });
+        uploadTask.on('state_changed',
+            // Handles progress
+            null,
+            // Handle error
+            () => {
+                throw new Error('Failed to upload image to storage');
+            },
+            // Handle successful upload
+            async () => {
+                // Get download url of image
+                const downloadURL = await uploadTask.snapshot.ref.getDownloadURL().catch(() => {
+                    throw new Error('Failed to get download url');
+                });
 
-        // Set profile pic to download url in documents
-        await firestore.collection('users').doc(currentUser.uid)
-            .set({ profile_pic: downloadURL }, { merge: true })
-            .catch(() => {
-                throw new Error('Failed to set profile picture in document');
+                // Set profile pic to download url in documents
+                await firestore.collection('users').doc(currentUser.uid)
+                    .set({ profile_pic: downloadURL }, { merge: true })
+                    .catch(() => {
+                        throw new Error('Failed to set profile picture in document');
+                    });
+
+                // Change profile_pic in currentUserInfo
+                const newCurrentUserInfo = currentUserInfo;
+                newCurrentUserInfo.profile_pic = downloadURL;
+                setCurrentUserInfo(newCurrentUserInfo);
+
+                // Update users posts to match
+                await updatePostsAndStories(currentUser);
             });
-
-        // Change profile_pic in currentUserInfo
-        const newCurrentUserInfo = currentUserInfo;
-        newCurrentUserInfo.profile_pic = downloadURL;
-        setCurrentUserInfo(newCurrentUserInfo);
-
-        // Update users posts to match
-        await updatePostsAndStories(currentUser);
     }
 
-    // Logout user
+    /**
+     * Signs out user
+     * @returns Promise
+     */
     function logout() {
         return auth.signOut();
     }
 
+    /**
+     * Resets password with email
+     * @param {String} email Email
+     * @returns Promise
+     */
     function resetPassword(email) {
         return auth.sendPasswordResetEmail(email);
     }
 
+    /**
+     * Sets additional user information e.g. username, bio
+     * @param {User} user
+     * @returns Promise
+     */
     function getAdditionalUserInfo(user) {
         return firestore
             .collection('users')
@@ -219,7 +266,9 @@ export function AuthProvider({ children }) {
             });
     }
 
-    // Sets current user after render
+    /**
+     * Sets current user after render
+     */
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged((user) => {
             setCurrentUser(user);

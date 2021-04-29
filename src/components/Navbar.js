@@ -44,7 +44,6 @@ function Navbar() {
                         return notification;
                     });
                     setNotifications(data);
-                    console.log(data);
                 });
             return unsubscribe;
         }

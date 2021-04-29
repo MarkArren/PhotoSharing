@@ -31,7 +31,6 @@ function Feed() {
                         return post;
                     });
                     setFeed(data);
-                    console.log(data);
                 });
             return unsubscribe;
         }
@@ -46,7 +45,6 @@ function Feed() {
                     return post;
                 });
                 setFeed(data);
-                console.log(data);
             });
         return unsubscribe;
     }, [feedType]);
@@ -72,7 +70,6 @@ function Feed() {
                     return story;
                 });
                 setStoryFeed(data);
-                console.log(data);
             });
         return unsubscribe;
     }, []);

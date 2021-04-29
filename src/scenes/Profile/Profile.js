@@ -92,7 +92,6 @@ function Profile(props) {
                                 return post;
                             });
                             setPosts(data);
-                            console.log(data);
                         });
 
                     // Check if user followers target user
@@ -119,7 +118,6 @@ function Profile(props) {
                                 return story;
                             });
                             setStories(data);
-                            console.log(data);
                         });
                 }
             }, () => {

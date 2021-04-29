@@ -46,6 +46,7 @@ const EditProfile = () => {
             }
         } catch (exception) {
             setError(exception.message);
+            console.error(exception);
             return;
         }
 
