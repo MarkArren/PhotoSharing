@@ -55,7 +55,7 @@ function Navbar() {
 
         <div className={notificationsOpen ? 'nav-notifications' : 'hide'}>
             <div className='notifications-container'>
-                <span className='nav-notifications-title'>{notifications?.lenth < 1 ? 'Notifications' : 'No notifications'}</span>
+                <span className='nav-notifications-title'>{notifications?.length > 0 ? 'Notifications' : 'No notifications'}</span>
                 {notifications
             && notifications?.map((notification) => (
                 <Notification notification={notification} key={notification.id} />
