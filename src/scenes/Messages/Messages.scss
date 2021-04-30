@@ -80,7 +80,7 @@
     }
 }
 
-@media (max-width: 25rem) {
+@media (max-width: $breakpoint-mobile) {
     .messages-wrapper{
         grid-template-columns: 100%;
         grid-template-rows: 100%;

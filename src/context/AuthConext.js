@@ -69,7 +69,7 @@ export function AuthProvider({ children }) {
 
         // Create user as username is unique
         const user = await auth.createUserWithEmailAndPassword(email, password).catch((e) => {
-            throw new Error('Failed to create user in auth', e);
+            throw new Error(e.message);
         });
 
         // Create user in database

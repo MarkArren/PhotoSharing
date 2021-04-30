@@ -206,7 +206,7 @@
     }
 }
 
-@media (max-width: 25rem) {
+@media (max-width: $breakpoint-mobile) {
     .stories-container {
         padding: 0 0.5rem;
     }

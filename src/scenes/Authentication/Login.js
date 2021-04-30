@@ -43,37 +43,23 @@ const Login = () => {
 
     return (
         <div>
-            <div className='form-center'>
-                <div className='form-wrapper'>
-                    <h1>Log In</h1>
-                    <br />
-                    <div className='error'>{error}</div>
-                    <br />
-                    <form onSubmit={handleSubmit}>
-                        <input type='email' ref={emailRef} placeholder='Email' required />
-                        <input type='password' ref={passwordRef} placeholder='Password' required />
-                        <input type='submit' disabled={loading} className='submit' value='Log In' />
-                    </form>
-                    <form onSubmit={handleGoogleLogin}>
-                        <input
-                            type='submit'
-                            disabled={loading}
-                            className='submit-google'
-                            value='Log In with Google'
-                        />
-                    </form>
-                    <div>
-                        <Link to='/password-reset' className='forgot'>
-                            Forgot Password?
-                        </Link>
-                    </div>
+            <div className='form-container'>
+                <form className='form' onSubmit={handleSubmit}>
+                    <span className='form-title'>Log In</span>
+                    <div className='form-error'>{error}</div>
+                    <input className='form-input' type='email' ref={emailRef} placeholder='Email' required />
+                    <input className='form-input' type='password' ref={passwordRef} placeholder='Password' required />
+                    <button type='submit' disabled={loading} className='form-input form-submit'>Log In</button>
+                    <button type='button' disabled={loading} className='form-input form-submit-google' onClick={handleGoogleLogin}>Log In with Google</button>
+                    <Link to='/password-reset' className='forgot'>
+                        Forgot Password?
+                    </Link>
                     <br />
                     <div>
-                        <span>Don&apos;t have an account?</span>
-                        &nbsp;
+                        <span>Don&apos;t have an account?&nbsp;</span>
                         <Link to='/signup'>Sign Up</Link>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     );

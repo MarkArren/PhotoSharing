@@ -1,11 +1,33 @@
 @import '../../App.scss';
 
-.form-center{
+.form-container{
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    min-width: 100vh;
+    height: 100vh;
+    width: 100vw;
+}
+    
+.form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 5rem;
+    border-radius: .25rem;
+    
+    width: 100%;
+    max-width: 25rem;
+
+
+    background-color: $accentColour1;
+
+    &-title{
+        font-size: 2rem;
+        font-weight: 700;
+        padding-bottom: 2rem;
+    }
 
     a{
         font-weight: 700;
@@ -13,14 +35,35 @@
             font-weight: 500;
         }
     }
+    
 
-    .error{
-        width: 100%;
-        padding: 10px 20px;
+    &-input{
+        background-color: $accentColour2;
+        color: $textColour;
+        border: none;
         border-radius: 5px;
+        padding: 1rem 1rem;
+        outline: none;
+        margin-bottom: 2rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    &-submit{
+        background-color: $submitColour;
+    }
+    &-submit-google{
+        background-color: #0F9D58;
+    }
+
+    &-error{
+        width: 100%;
+        padding: 1rem 1rem;
+        border-radius: .25rem;
         box-sizing: border-box;
         color: $textColour;
-        background-color: #aa0000;
+        background-color: $errorColour;
+        margin-bottom: 2rem;
 
         &:empty {
             display: none;
@@ -29,48 +72,21 @@
             background-color: green;
         }
     }
+}
 
-    .form-wrapper{
-        // margin: auto;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        // min-height: 50%;
 
-        padding: 25px 100px 50px 100px;
-        border-radius: 5px;
-        
-        width: 25%;
-        
+@media (max-width: 56rem) {
+    .form{
+        padding: 3rem;
+    }
+}
 
-        background-color: $accentColour1;
-
-        form{
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-        }
-
-        input{
-            background-color: $accentColour2;
-            color: $textColour;
-            border: none;
-            border-radius: 5px;
-            padding: 20px 20px;
-            outline: none;
-            margin-bottom: 35px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .submit{
-            background-color: $submitColour;
-        }
-        .submit-google{
-            background-color: #0F9D58;
-        }
+@media (max-width: $breakpoint-mobile) {
+    .form-container{
+        align-items: flex-start;
+    }
+    .form{
+        padding: 2rem;
+        background-color: transparent;
     }
 }

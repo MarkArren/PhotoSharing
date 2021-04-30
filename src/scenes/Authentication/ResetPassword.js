@@ -29,33 +29,23 @@ const ResetPassword = () => {
 
     return (
         <div>
-            <div className='form-center'>
-                <div className='form-wrapper'>
-                    <h1>Password Reset</h1>
-                    <br />
+            <div className='form-container'>
+                <form className='form' onSubmit={handleSubmit}>
+                    <span className='form-title'>Password Reset</span>
                     <div className='error green'>{message}</div>
-                    <br />
                     <div className='error'>{error}</div>
-                    <br />
-                    <form onSubmit={handleSubmit}>
-                        <input type='email' ref={emailRef} placeholder='Email' required />
-                        <input
-                            type='submit'
-                            disabled={loading}
-                            className='submit'
-                            value='Reset Password'
-                        />
-                    </form>
+                    <input className='form-input' type='email' ref={emailRef} placeholder='Email' required />
+                    <button type='submit' disabled={loading} className='form-input form-submit'>Reset Password</button>
                     <div>
-                        <span>Don&apos;t have an account?</span>
+                        <span>Don&apos;t have an account?&nbsp;</span>
                         <Link to='/signup'>Sign Up</Link>
                     </div>
                     <br />
                     <div>
-                        <span>Already have an account?</span>
+                        <span>Already have an account?&nbsp;</span>
                         <Link to='/login'>Log In</Link>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     );

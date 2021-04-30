@@ -50,35 +50,21 @@ const Signup = () => {
 
     return (
         <div>
-            <div className='form-center'>
-                <div className='form-wrapper'>
-                    <h1>Sign Up</h1>
-                    <br />
-                    <div className='error'>{error}</div>
-                    <br />
-                    <form onSubmit={handleSubmit}>
-                        <input type='email' ref={emailRef} placeholder='Email' required />
-                        <input type='text' ref={nameRef} placeholder='Full Name' required />
-                        <input type='text' ref={usernameRef} placeholder='Username' required />
-                        <input type='password' ref={passwordRef} placeholder='Password' required />
-                        <input
-                            type='password'
-                            ref={passwordConfirmRef}
-                            placeholder='Password Confirm'
-                            required
-                        />
-                        <input
-                            type='submit'
-                            disabled={loading}
-                            className='submit'
-                            value='Sign up'
-                        />
-                    </form>
+            <div className='form-container'>
+                <form className='form' onSubmit={handleSubmit}>
+                    <span className='form-title'>Sign Up</span>
+                    <div className='form-error'>{error}</div>
+                    <input className='form-input' type='email' ref={emailRef} placeholder='Email' required />
+                    <input className='form-input' type='' ref={nameRef} placeholder='Full Name' required />
+                    <input className='form-input' type='' ref={usernameRef} placeholder='Username' required />
+                    <input className='form-input' type='password' ref={passwordRef} placeholder='Password' required />
+                    <input className='form-input' type='password' ref={passwordConfirmRef} placeholder='Password Confirm' required />
+                    <button type='submit' disabled={loading} className='form-input form-submit'>Sign Up</button>
                     <div>
-                        <span>Already have an account? </span>
+                        <span>Already have an account?&nbsp;</span>
                         <Link to='/login'>Log In</Link>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     );

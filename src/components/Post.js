@@ -2,7 +2,7 @@
 import './Post.scss';
 import React, { useState } from 'react';
 import { IconContext } from 'react-icons';
-import { VscHeart } from 'react-icons/vsc';
+import { VscHeart, VscChevronLeft } from 'react-icons/vsc';
 import { BsChat } from 'react-icons/bs';
 import { AiOutlineSend, AiOutlineEllipsis } from 'react-icons/ai';
 import { RiHeartFill } from 'react-icons/ri';
@@ -263,6 +263,13 @@ function Post({ post }) {
                 ) : null}
             </div>
             <div className='comments-container' style={{ visibility: showComments ? 'visible' : 'hidden' }}>
+
+                <div className='comments-top'>
+                    <button type='button' className='comments-top-back' onClick={viewComments}>
+                        <VscChevronLeft size='30px' />
+                    </button>
+                    <h3 className='comments-top-title'>Comments</h3>
+                </div>
                 <div className='comments' refresh={comments}>
                     {comments
                         && comments?.map((comment) => (

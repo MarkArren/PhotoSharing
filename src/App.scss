@@ -16,6 +16,10 @@ $submitColour: #7ebbdb;
 $errorColour: #aa0000;
 $messageColour: #7ebbdb;
 
+$breakpoint-mobile-small: 20em;
+$breakpoint-mobile: 26.6em;
+$breakpoint-tablet: 48em;
+$breakpoint-desktop: 64em;
 
 
 @mixin scrollbar {

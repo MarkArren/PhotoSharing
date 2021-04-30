@@ -83,7 +83,7 @@ $bubble-colour: hsl(0, 0%, 15%);
     }
 }
 
-@media (max-width: 25rem) {
+@media (max-width: $breakpoint-mobile) {
     .chat-wrapper{
         .chat-top{
             &-back{
