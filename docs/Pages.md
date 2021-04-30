@@ -6,14 +6,14 @@ This is the first page a guest user will see when they get to the site, and will
 When signing up the sites asks them for their email, name, username and password.
 
 <div style="display:flex;">
-    <img src="./images/Loginm.png" height="400">
-    <img src="./images/LoginResetm.png" height="400" style="margin-left:1rem;">
-    <img src="./images/LoginSignupm.png" height="400" style="margin-left:1rem;">
+    <img src="./images/pages/Loginm.png" height="400">
+    <img src="./images/pages/LoginResetm.png" height="400" style="margin-left:1rem;">
+    <img src="./images/pages/LoginSignupm.png" height="400" style="margin-left:1rem;">
 </div>
 
-![Login](./images/Login.png)
-![Reset Password](./images/LoginReset.png)
-![Sign Up](./images/LoginSignup.png)
+![Login](./images/pages/Login.png)
+![Reset Password](./images/pages/LoginReset.png)
+![Sign Up](./images/pages/LoginSignup.png)
 
 
 ## States
@@ -28,8 +28,8 @@ The main feature of the feed page is to show posts and stories from all the user
 It also features a 'For You' page which shows posts from other users which they might not follow
 
 <div style="display:flex;">
-    <img src="./images/Feedm.png" height="400">
-    <img src="./images/Feed.png" height="400" style="margin-left:1rem;">
+    <img src="./images/pages/Feedm.png" height="400">
+    <img src="./images/pages/Feed.png" height="400" style="margin-left:1rem;">
 </div>
 
 ## Components
@@ -42,11 +42,11 @@ The main components which make up the page are:
 The messages page is where the user can view all their messages.
 
 <div style="display:flex;">
-    <img src="./images/Messagesm1.png" height="400">
-    <img src="./images/Messagesm2.png" height="400" style="margin-left:1rem;">
+    <img src="./images/pages/Messagesm1.png" height="400">
+    <img src="./images/pages/Messagesm2.png" height="400" style="margin-left:1rem;">
 </div>
 
-![Messages](./images/Messages.png)
+![Messages](./images/pages/Messages.png)
 
 
 ## States
@@ -73,8 +73,8 @@ Used to get all users for the `composeContacts` list when `showCompose` is set t
 The profile page is used to view any user's profile.
 
 <div style="display:flex;">
-    <img src="./images/Profilem.png" height="400">
-    <img src="./images/Profile.png" height="400" style="margin-left:1rem;">
+    <img src="./images/pages/Profilem.png" height="400">
+    <img src="./images/pages/Profile.png" height="400" style="margin-left:1rem;">
 </div>
 
 ## Props
@@ -103,8 +103,8 @@ It first searches the [user collection](./Firestore.md#User) for the `username` 
 The upload page is where the user uploads their [posts](./Firestore.md#Posts) and [stories](./Firestore.md#Stories). The main component is the UploadForm.
 
 <div style="display:flex;">
-    <img src="./images/Uploadm.png" height="400">
-    <img src="./images/Upload.png" height="400" style="margin-left:1rem;">
+    <img src="./images/pages/Uploadm.png" height="400">
+    <img src="./images/pages/Upload.png" height="400" style="margin-left:1rem;">
 </div>
 
 ## Components

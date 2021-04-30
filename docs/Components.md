@@ -1,7 +1,14 @@
 # **Components**
 <!--  Show components in different states for different screens -->
 # Navbar
-This component is used for navigation around the whole website and is used on almost every page.
+This component is used for navigation around the whole website and is used on almost every page. This component also displays a users notifications.
+
+
+<div style="display:flex;">
+    <img src="./images/components/NavbarOpenm.png" height="400">
+    <img src="./images/components/NavbarNotificationsm.png" height="400" style="margin-left:1rem;">
+</div>
+Navbar open on mobile, notifications open on mobile
 
 ## States
 * notificationsOpen - Tracks whether notifications menu is open
@@ -11,11 +18,19 @@ This component is used for navigation around the whole website and is used on al
 ### useEffect
 Fetches all the users [notifications](./Firestore.md#Notifications) from the database and updates the `notifications` state when `notificationsOpen` is set to true
 
-<!-- TODO show picture of navbar indifferent states(notifOpen) and mobile -->
+## Sub-components
+* Notification
 
 ---
 # Post
 This component is used to display a post and comments for that post.
+
+
+<div style="display:flex;">
+    <img src="./images/components/PostCommentsm.png" height="400">
+    <img src="./images/components/Post.png" height="400" style="margin-left:1rem;">
+</div>
+Comments open on mobile, comments open on desktop
 
 ## Props
 This component takes in one prop which is an object [post](./Firestore.md#post)
@@ -53,7 +68,11 @@ This is called when a user presses the delete button on a post and will the dele
 
 ---
 # Notification
-This component displays a user's notifications
+This component displays a single notification.
+
+![Notifications Type](./images/components/Notifications.png)
+
+3 different types of notifications
 
 ## States
 * doesFollow - Whether the user follows or not
@@ -62,11 +81,10 @@ This component displays a user's notifications
 ### handleFollow
 Handles when the follow button is pressed, calling [followUser](./HelperFunctions.md#followUser) and then sets `doesFollow`
 
-<!-- TODO show all differnent types of notifications -->
 
 ---
 # UploadForm
-This component is the form to upload a post or a story
+This component is the form to upload a post or a story. See [Upload Page](./Pages.md#Upload) for images
 
 ## States
 * image - Stores image uploaded by user
@@ -81,7 +99,7 @@ Handles uploading the story. First check if user is logged in and there is an im
 
 ---
 # Stories
-This component is used to view individual stories and also shows the preview of multiple stories.
+This component is used to view individual stories and also shows the preview of multiple stories. See [Feed Page](./Pages.md#Feed) for images
 
 ## Props
 This component takes in one prop which is the object `stories` which is a collection of all stories that need to be displayed
