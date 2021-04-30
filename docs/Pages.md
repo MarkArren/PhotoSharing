@@ -5,6 +5,16 @@ This is the first page a guest user will see when they get to the site, and will
 
 When signing up the sites asks them for their email, name, username and password.
 
+<!-- ![Feed](./images/Feed.png) -->
+
+<div style="display:flex;">
+    <img src="./images/Feedm.png" height="250">
+    <img src="./images/Feed.png" height="250" style="margin-left:1rem;">
+</div>
+
+
+
+
 
 ## States
 * error - Used to store error messages
