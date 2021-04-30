@@ -90,7 +90,7 @@ The profile page is used to view any user's profile.
 
 ## Functions
 ### handleFollow
-Function which is called when the follow button is pressed. The function first checks if the user is not on their own profile, then calls [followerUser](./HelperFunctions.md#followUser) and depending on the result sets `doesFollow` and also updates the user's follower count
+Function which is called when the follow button is pressed. The function first checks if the user is not on their own profile, then calls [followerUser](./HelperFunctions.md#followUser) and depending on the result sets `doesFollow` and then updates the user's follower count
 ### useEffect
 This is used to get all information on the user.
 

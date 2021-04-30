@@ -31,7 +31,7 @@ This document stores the following fields about the user
 * posts - A count of the user’s posts
 
 ## Collections
-The sub-collections are important as they store the majority of the user data
+The sub-collections are important as they store much of the user data
 
 ### Posts
 Post stores all posts which are uploaded by the user themselves. Posts are added to the users `posts` collection by the helper function [`uploadPost`](./HelperFunctions.md#uploadPost). Each document uses an automatically generated UID for the ID please see [here](#Post) for more information on each post document.
@@ -166,3 +166,4 @@ This collection stores all the messages in the conversation. Each document store
 
 ---
 ### [Chapter 3 Firebase Cloud Functions](./CloudFunctions.md)
+

@@ -55,8 +55,7 @@ The function first uploads the image to the storage bucket where it is stored an
 # updatePostsandStories
 This function updates all the users posts and stories with their new profile information. This is called when a user changes their name, username or profile picture.
 
-The function first gets the users updated information from the database. With that information it then writes to all the users *posts* and *stories* in their  respective collections. This change is then automatically fanned out to all the users followers with the cloud functions [createPostFeeds](./CloudFunctions.md#createPostFeeds) and [fanOutStory](./CloudFunctions.md#fanOutStory)
-
+The function first gets the users updated information from the database. With that information it then writes to all the users *posts* and *stories* in their  respective collections. This change is then automatically fanned out to all the user’s followers with the cloud functions [createPostFeeds](./CloudFunctions.md#createPostFeeds) and [fanOutStory](./CloudFunctions.md#fanOutStory)
 
 ## Parameters
  * currentUser - Current logged in user

@@ -1,8 +1,7 @@
 # **Components**
 <!--  Show components in different states for different screens -->
 # Navbar
-This component is used for navigation around the whole website and is used on almost every page. This component also displays a users notifications.
-
+This component is used for navigation around the whole website and is used on almost every page. This component also displays a user’s notifications.
 
 <div style="display:flex;">
     <img src="./images/components/NavbarOpenm.png" height="400">
@@ -53,7 +52,7 @@ This component takes in one prop which is an object [post](./Firestore.md#post)
 
 ## Functions
 ### viewComments
-This function is fetch the comments from the database and then toggle the view of the comments
+This function fetches the comments from the database and then toggles the view of the comments
 
 ### handleSubmitComment
 This function is used to post a comment on a post and also sends a notification
@@ -113,10 +112,10 @@ This component takes in one prop which is the object `stories` which is a collec
 Used to toggle the individual view of a story by setting the `currentStoryIndex` and `showStory`.
 
 ### handlePreviousStory
-Used to go back one story, decrements the `currentStoryIndex`. If the index goes below zero then the individual story view is closed.
+Used to go back one story, decrements the `currentStoryIndex`. If the index goes below zero, then the individual story view is closed.
 
 ### handleNextStory
-Used to go forward one story, increments the `currentStoryIndex`. If the index reaches the end then the individual story view is closed.
+Used to go forward one story, increments the `currentStoryIndex`. If the index reaches the end, then the individual story view is closed.
 
 ---
 ### [Chapter 6 Helper Functions](./HelperFunctions.md)
